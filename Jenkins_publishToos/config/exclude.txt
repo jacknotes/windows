@@ -1,0 +1,10 @@
+.cs
+.asax
+.csproj
+.pdb
+\properties\
+\services\
+\roslyn\
+\obj\
+web.debug.config
+web.release.config

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <ProfilePath>D:\projects\Ctrip.SOA\Ctrip.SOA.Service.User\ConfigProfile.xml</ProfilePath>
+  <ProjectFile>D:\TFS\HHTravel\branches\HHTravel.Order-20131231\HHOffline\HHTravel.Offline.Order\HHTravel.Offline.Order.Web\HHTravel.Offline.Order.Web.csproj</ProjectFile>
+  <ProjectFolder>D:\projects\Ctrip.SOA\Ctrip.SOA.Service.User</ProjectFolder>
+  <Environments>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfConfigEnv xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConfigEnv&gt;
+    &lt;Name&gt;HHTravel&lt;/Name&gt;
+    &lt;Target&gt;dev&lt;/Target&gt;
+    &lt;IIS&gt;IIS7&lt;/IIS&gt;
+    &lt;DotNet&gt;Net4&lt;/DotNet&gt;
+    &lt;DataCenter&gt;sh&lt;/DataCenter&gt;
+  &lt;/ConfigEnv&gt;
+  &lt;ConfigEnv&gt;
+    &lt;Name&gt;HHTravelPrd&lt;/Name&gt;
+    &lt;Target&gt;prd&lt;/Target&gt;
+    &lt;IIS&gt;IIS7&lt;/IIS&gt;
+    &lt;DotNet&gt;Net4&lt;/DotNet&gt;
+    &lt;DataCenter&gt;sh&lt;/DataCenter&gt;
+  &lt;/ConfigEnv&gt;
+&lt;/ArrayOfConfigEnv&gt;</Environments>
+</settings>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UpgradeInfo>
+  <Version>1.4.9</Version>
+  <VersionDescription>Test</VersionDescription>
+  <UpdateType>All</UpdateType>
+  <LastUpgradeTime>2014/03/25</LastUpgradeTime>
+  <Consts>
+    <UpdateSiteUrl>http://citsm.sh.ctriptravel.com/config/ConfigGen/</UpdateSiteUrl>
+    <Targets>dev,test,testl,testp,testu,testx,testy,fws,fat,lpt,uat,prd,uat_nt</Targets>
+    <DataCenters>sh,sh2,nt</DataCenters>
+    <IISVersions>IIS6,IIS7</IISVersions>
+    <DotNetVersions>Net2,Net4</DotNetVersions>
+    <Mandatory>dev,uat,prd</Mandatory>
+    <SpecialConfigs>{$g.envtype}.qa.nt.ctripcorp.com,fws.qa.nt.ctripcorp.com,lpt.qa.nt.ctripcorp.com,pub.mongo.db.lpt.qa.nt.ctripcorp.com</SpecialConfigs>
+  </Consts>
+</UpgradeInfo>
