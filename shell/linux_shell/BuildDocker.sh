@@ -5,59 +5,120 @@
 
 #init variables
 echo "init variables..........."
-ProjectName=${JOB_NAME}
-VersionFile='tag.txt'
+JobName=${JOB_NAME}
+VersionFile='Version.txt'
+ProjectName=
 MirrorName=
-Tag=
-Username='admin'
-Password='password'
-Repository='192.168.13.21:5000'
+TagName=
+Username='jenkins'
+Password='Homsom+4006'
+Repository='192.168.13.235:8000'
+
+info(){
+	echo "---------Example Statement----------"
+        echo "ProjectName:fat"
+        echo "MirrorName:systemlog"
+        echo "TagName:v1"
+        echo "------------------------------------"
+}
 
 #change to workspace
-cd /var/lib/jenkins/workspace/${ProjectName}
+cd /var/lib/jenkins/workspace/${JobName}
 
-#judgment MirrorName and Tag is legal
-echo "judgment MirrorName and Tag is legal......."
+#check ${JobName}/${VersionFile} file
+echo "check ${JobName}/${VersionFile} file legal......."
 if [ -f $VersionFile ];then
-	MirrorName_LineNum=$(grep -Ev '#|^$' $VersionFile | wc -l)
-	[ $MirrorName_LineNum -gt 1 ] && echo "Error: MirrorName greater than 1,INFO: only allow 1 Mirror Name and Tag,Example mirror_name:version_name" && exit 2
-	MirrorName=$(grep -v '#' $VersionFile | awk -F ':' '{print $1'})
-	[ -z $MirrorName ] && echo "Error: MirrorName is null,INFO: MirrorName and Tag must all exist,Example mirror_name:version_nam " && exit 2
-	Tag=$(grep -v '#' $VersionFile | awk  -F ':' '{print $2}')
-	[ -z $Tag ] && echo "Error: Tag is null,INFO: MirrorName and Tag must all exist,Example mirror_name:version_nam" && exit 2
-	echo "MirrorName and Tag is legal"
+	ProjectNameNum=$(grep -Ev '#|^$' $VersionFile | grep -i '^ProjectName' | wc -l)
+	MirrorNameNum=$(grep -Ev '#|^$' $VersionFile | grep -i '^MirrorName' | wc -l)
+	TagNameNum=$(grep -Ev '#|^$' $VersionFile | grep -i '^TagName' | wc -l)
+	num=$((${ProjectNameNum}+${MirrorNameNum}+${TagNameNum}))
+	if [ $num -gt 3 ];then
+		echo "ERROR: $VersionFile only allow have one ProjectName,MirrorName,TagName"	
+		info
+		exit 2
+	else
+		ProjectName=$(grep -Ev '#|^$' $VersionFile | awk '{sub(/^[[:blank:]]*/,"",$0);sub(/[[:blank:]]*$/,"",$0);gsub(/[[:blank:]]*/,"",$0);print $0}' | grep -i '^ProjectName' | awk -F : '{print $2}')
+		[ -z $ProjectName ] && echo "Error: ProjectName value is null" && info && exit 2
+		MirrorName=$(grep -Ev '#|^$' $VersionFile | awk '{sub(/^[[:blank:]]*/,"",$0);sub(/[[:blank:]]*$/,"",$0);gsub(/[[:blank:]]*/,"",$0);print $0}' | grep -i '^MirrorName' | awk -F : '{print $2}')
+		[ -z $MirrorName ] && echo "Error: MirrorName value is null" && info && exit 2
+		TagName=$(grep -Ev '#|^$' $VersionFile | awk '{sub(/^[[:blank:]]*/,"",$0);sub(/[[:blank:]]*$/,"",$0);gsub(/[[:blank:]]*/,"",$0);print $0}' | grep -i '^TagName' | awk -F : '{print $2}')
+		[ -z $TagName ] && echo "Error: TagName value is null" && info && exit 2
+	fi
 else
-	echo "Error: /var/lib/jenkins/workspace/${ProjectName}/${VersionFile} file does not exist,Content Example mirror_name:version_nam"
+	echo "Error: ${ProjectName}/${VersionFile} file does not exist"
+	info
 	exit 2;
 fi
 
 #build docker image
-echo "build image ${MirrorName}:${Tag}........"
-sudo docker build -t ${MirrorName}:${Tag} . && echo "INFO: Docker Build Image Succeed" || (echo "ERROR: Docker Build Image Failure" && exit 6)
+echo "build image ${ProjectName}/${MirrorName}:${TagName}........"
+sudo docker build -t ${ProjectName}/${MirrorName}:${TagName} . 
+if [ $? == 0 ];then
+	echo "INFO: Docker Build Image Succeed" 
+else
+	echo "ERROR: Docker Build Image Failure" 
+	exit 6
+fi
 
 #login private repository
 echo "login ${Repository}........."
-sudo docker login -u ${Username} -p ${Password} ${Repository} && echo "INFO: Login Succeed" || (echo "ERROR: Login Failure" && exit 6)
+sudo docker login -u ${Username} -p ${Password} ${Repository} 
+if [ $? == 0 ];then
+	echo "INFO: Login Succeed"
+else
+	echo "ERROR: Login Failure"
+	exit 6
+fi
 
 #tag image 
-echo "tag image ${MirrorName}:${Tag} to ${Repository}/${MirrorName}:${Tag}........"
-sudo docker tag ${MirrorName}:${Tag} ${Repository}/${MirrorName}:${Tag} && echo "INFO: Tag Image Succeed" || (echo "ERROR: Tag Image Failure" && exit 6)
+echo "tag image ${ProjectName}/${MirrorName}:${TagName} to ${Repository}/${ProjectName}/${MirrorName}:${TagName}........"
+sudo docker tag ${ProjectName}/${MirrorName}:${TagName} ${Repository}/${ProjectName}/${MirrorName}:${TagName} 
+if [ $? == 0 ];then
+	echo "INFO: Tag Image Succeed" 
+else
+	echo "ERROR: Tag Image Failure" 
+	exit 6
+fi
 
 #push local image to remote repository
-echo "push local image ${Repository}/${MirrorName}:${Tag} to remote repository ${Repository}......."
-sudo docker push ${Repository}/${MirrorName}:${Tag} && echo "INFO: Push ${Repository}/${MirrorName}:${Tag} Image To Remote Repository Succeed" || (echo "ERROR: Push ${Repository}/${MirrorName}:${Tag} Image To Romote Repository Failure" && exit 6)
+echo "push local image ${Repository}/${ProjectName}/${MirrorName}:${TagName} to remote repository ${Repository}......."
+sudo docker push ${Repository}/${ProjectName}/${MirrorName}:${TagName} 
+if [ $? == 0 ];then
+	echo "INFO: Push ${Repository}/${ProjectName}/${MirrorName}:${TagName} Image To Remote Repository Succeed" 
+else
+	echo "ERROR: Push ${Repository}/${ProjectName}/${MirrorName}:${TagName} Image To Romote Repository Failure" 
+	exit 6
+fi
 
 #logout private repository
 echo "logout ${Repository}........."
-sudo docker logout ${Repository} && echo "INFO: Logout Succeed" || (echo "ERROR: Logout Failure" && exit 6)
+sudo docker logout ${Repository} 
+if [ $? == 0 ];then
+	echo "INFO: Logout Succeed" 
+else
+	echo "ERROR: Logout Failure" 
+	exit 6
+fi
 
 #delete local build and push image
-echo "delete local image ${MirrorName}:${Tag} and ${Repository}/${MirrorName}:${Tag}........"
-sudo docker image rm ${MirrorName}:${Tag} ${Repository}/${MirrorName}:${Tag} && echo "INFO: Local Image ${MirrorName}:${Tag} ${Repository}/${MirrorName}:${Tag} Delete Succeed" || (echo "ERROR: Local Image ${MirrorName}:${Tag} ${Repository}/${MirrorName}:${Tag} Delete Failure" && exit 6)
+echo "delete local image ${ProjectName}/${MirrorName}:${TagName} and ${Repository}/${ProjectName}/${MirrorName}:${TagName}........"
+sudo docker image rm ${ProjectName}/${MirrorName}:${TagName} ${Repository}/${ProjectName}/${MirrorName}:${TagName} 
+if [ $? == 0 ];then
+	echo "INFO: Local Image ${ProjectName}/${MirrorName}:${TagName} ${Repository}/${ProjectName}/${MirrorName}:${TagName} Delete Succeed" 
+else
+	echo "ERROR: Local Image ${ProjectName}/${MirrorName}:${TagName} ${Repository}/${ProjectName}/${MirrorName}:${TagName} Delete Failure" 
+	exit 6
+fi
 
 #delete local name is <none> image
 NoNameImage=$(sudo docker image ls | grep '<none>' | awk '{print $3}') #if not delete name is <none> image,annotation can be. 
 for i in ${NoNameImage};do
 	echo "delete local not name image $i ........."
-	sudo docker image rm $i && echo "INFO: Local not name Image ${i} Delete Succeed" || (echo "ERROR: Local not name Image ${i} Delete Failure" && exit 6)
+	sudo docker image rm $i 
+	if [ $? == 0 ];then
+		echo "INFO: Local not name Image ${i} Delete Succeed" 
+	else
+		echo "ERROR: Local not name Image ${i} Delete Failure" 
+		exit 6
+	fi
 done
