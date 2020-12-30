@@ -1,0 +1,30 @@
+read-host "input:" | get-service
+Get-Content f:\services.txt | get-service
+Import-Csv f:\services.csv | get-service
+--过滤
+where-object status -eq running 
+where-object {$_.status -eq "running"}
+
+--输出
+write-host "test"
+Get-ADUser -filter {enabled -eq "true"} -properties * | select name,samaccountname | export-csv f:\users.csv
+Get-ADUser -filter {enabled -eq "true"} -properties * | select name,samaccountname | Out-File f:\users.txt
+
+--powershell node
+--custom user
+get-aduser -filter {enabled -eq "true"} -properties * | where-object samaccountname -eq "0799" | select-object displayname,samaccountname,Created,LastLogonDate,PasswordExpired,PasswordNeverExpires,PasswordLastSet,AccountLockoutTime | Format-table
+
+--password expired
+get-aduser -filter {enabled -eq "true"} -properties * | select-object displayname,samaccountname,Created,LastLogonDate,PasswordExpired,PasswordNeverExpires,PasswordLastSet,AccountLockoutTime,CanonicalName | where-object PasswordExpired -eq "true" | format-table
+
+--disable users
+get-aduser -filter {enabled -eq "false"} -properties * | select-object displayname,samaccountname,Created,LastLogonDate,PasswordExpired,PasswordNeverExpires,PasswordLastSet,AccountLockoutTime,CanonicalName | format-table
+
+--rpc 
+--远程执行命令
+wmic /node:192.168.1.158 /user:pt007 /password:admin123  process call create "cmd.exe /c ipconfig>d:\result.log
+--远程改计算机名
+wmic /node:192.168.1.158 /user:pt007 /password:admin123 process call create 'cmd.exe /c wmic computersystem where caption="WIN-DF8S0D8K72Q" call rename "ops-test002"'
+--远程开启远程桌面----0(关)---1(开)
+wmic rdtoggle where servername='ops-test002' call setallowtsconnections 1
+wmic /node:192.168.1.158 /user:pt007 /password:admin123 process call create 'cmd.exe /c wmic rdtoggle where servername="ops-test002" call setallowtsconnections 1'
