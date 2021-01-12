@@ -306,3 +306,85 @@ Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
 %号是foreach-object的别名
 ?是where-object的别名,`?
 
+----文本处理
+example1:
+type .\users.txt
+李一 93
+王二 83
+王三 93
+李四 60
+王五 75
+马六 61
+孙七 75
+刘八 75
+
+$scoreTables=@{}
+$stus=Get-Content .\users.txt |
+foreach{
+$stu=$_ -split " "
+if($scoreTables.ContainsKey($stu[1]))
+{
+}
+else{
+$scoreTables[$stu[1]]=1
+}
+@{Score=$stu[1];Name=$stu[0]}
+$stus | Where-Object {$scoreTables[$_.score] -gt 1} | foreach {"{0} {1}" -f $_.name,$_.score}
+李一 93
+王三 93
+王五 75
+孙七 75
+刘八 75
+
+example2:
+Get-Content .\users.txt | ForEach-Object{
+[pscustomobject]@{
+name = $_.split()[0]
+value = $_.split()[1]
+}
+} | Group-Object value | Where-Object {$_.count -gt 1} |
+foreach {$_.group | ForEach-Object {"{0} {1}" -f $_.name,$_.value}}
+李一 93
+王三 93
+王五 75
+孙七 75
+刘八 75
+
+example3:
+PS D:\deploy\iisbackup> $rawTxt='"data1":111,"data2":22,"data3":3,"data4":4444444'
+PS D:\deploy\iisbackup> $rawTxt -split ',' | ForEach-Object { $tmp=$_ -split ':';"{0}={1}" -f $tmp[0].Substring(1,$tmp[0].Length-2),$tmp[1]} | ConvertFrom-StringData
+Name                           Value
+----                           -----
+data1                          111
+data2                          22
+data3                          3
+data4                          4444444
+
+example4:
+PS D:\deploy\iisbackup> Import-Csv .\url.csv -Header "link"
+link
+----
+https://www.pstips.net/diff-with-currentculture-and-currentuiculture.html
+https://www.pstips.net/tag/powershell-v3
+https://www.pstips.net/powershell-download-files.html
+http://www.notelee.com/cs0012-the-type-system-object-is-defined-in-an-assembly-that-is-not-referenced.html
+http://www.notelee.com/scom-create-wmi-perf-rule.html
+http://www.lonsoon.com/2013/04/94.html
+http://www.lonsoon.com/2013/05/101.html
+
+PS D:\deploy\iisbackup> Import-Csv .\url.csv -Header "link" | ForEach-Object {([uri]($_.link)).host}
+www.pstips.net
+www.pstips.net
+www.pstips.net
+www.notelee.com
+www.notelee.com
+www.lonsoon.com
+www.lonsoon.com
+
+custom_example:
+PS D:\deploy\iisbackup\backup\iisbackup20210111> cat .\applicationHost.config | Where-Object {$_ -match "physicalPath"} | ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] | ForEach-Object {$_ -split '"'};$tmp2[1]}
+D:\ProductWeb\commonservice.hs.com
+D:\ProductWeb\cupid.homsom.com
+D:\ProductWeb\customerreposwebapi.hs.com
+$webdir=cat .\applicationHost.config | Where-Object {$_ -match "physicalPath"} | ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] | ForEach-Object {$_ -split '"'};$tmp2[1] -replace "D:\\","\\192.168.13.228\"}
+$webdir2=cat d:\deploy\iisbackup\backup\iisbackup20210111\applicationHost.config | Where-Object {$_ -match "physicalPath"} | ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] | ForEach-Object {$_ -split '"'};$tmp2[1]}
