@@ -388,3 +388,116 @@ D:\ProductWeb\cupid.homsom.com
 D:\ProductWeb\customerreposwebapi.hs.com
 $webdir=cat .\applicationHost.config | Where-Object {$_ -match "physicalPath"} | ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] | ForEach-Object {$_ -split '"'};$tmp2[1] -replace "D:\\","\\192.168.13.228\"}
 $webdir2=cat d:\deploy\iisbackup\backup\iisbackup20210111\applicationHost.config | Where-Object {$_ -match "physicalPath"} | ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] | ForEach-Object {$_ -split '"'};$tmp2[1]}
+
+脚本：
+xcopy.ps1:
+-------
+[cmdletbinding()]
+param(
+    [Parameter(Mandatory=$True,HelpMessage="Input Source Directory or file")]
+    [Alias('SDIR')]
+    [string]$SUNC=$(throw "Source Directory or file is NULL"),
+
+    [Parameter(Mandatory=$True,HelpMessage="Input Destination Directory")]
+    [Alias('DDIR')]
+    [string]$DUNC=$(throw "Destination Directory is NULL"),
+
+    [Parameter(Mandatory=$True,HelpMessage="Input Copy Type (dir | file)")]
+    [Alias('TYPE')]
+    [string]$CTYPE=$(throw "Type (dir | file) is NULL")
+)
+$LOGDIR="$DUNC\log"
+$LOGFILE="$LOGDIR\log"
+$DATEYEAR=(get-date).Year
+$DATEMONTH=(get-date).Month
+$DATEDAY=(get-date).Day
+$DATE="$DATEYEAR"+"$DATEMONTH"+"$DATEDAY"
+
+if((Get-Item $SUNC) -is [IO.DIRECTORYInfo]){$DIRNAME=$SUNC}
+elseif((Get-Item $SUNC) -is [IO.FileInfo]){$DIRNAME=Split-Path $SUNC}
+
+if((Get-Item $SUNC) -is [IO.DIRECTORYInfo]){$BASENAME="*"}
+elseif((Get-Item $SUNC) -is [IO.FileInfo]){$BASENAME=Split-Path $SUNC -Leaf -Resolve}
+
+#test path is exists.
+if (-not (Test-Path $SUNC)){
+    echo "source $nc path not exists"
+    exit 1
+}
+if (!(Test-Path $DUNC)){
+    echo "destination $nc path not exists"
+    exit 1
+}
+
+#create log dir
+New-Item -ItemType "directory" -Path "$LOGDIR" -Force > $null
+
+#echo datetime to logfile
+echo "BEGIN" >> "$LOGFILE$DATE.txt"
+(Get-Date).ToString() >> "$LOGFILE$DATE.txt"
+
+if($CTYPE -eq "dir" -and (Get-Item $SUNC) -is [IO.DIRECTORYInfo]){
+	xcopy $SUNC $DUNC /h/s/d/e/y/k/f | Out-File -Append "$LOGFILE$DATE.txt"
+	if ($?){
+        echo "RESULT: Copy $DIRNAME\* To $DUNC Successful" ;
+        echo "RESULT: Copy $DIRNAME\* To $DUNC Successful" >> "$LOGFILE$DATE.txt"
+    }else{
+        echo "RESULT: Copy $DIRNAME\* To $DUNC Failure";
+        echo "RESULT: Copy $DIRNAME\* To $DUNC Failure" >> "$LOGFILE$DATE.txt"
+    }
+}elseif($CTYPE -eq "file" -and (Get-Item $SUNC) -is [IO.FileInfo]){
+	xcopy $SUNC $DUNC /h/d/y/k/f | Out-File -Append "$LOGFILE$DATE.txt"
+	if ($?){
+        echo "RESULT: Copy $DIRNAME\\$BASENAME To $DUNC Successful" ;
+        echo "RESULT: Copy $DIRNAME\\$BASENAME To $DUNC Successful" >> "$LOGFILE$DATE.txt"
+    }else{
+        echo "RESULT: Copy $DIRNAME\\$BASENAME To $DUNC Failure";
+        echo "RESULT: Copy $DIRNAME\\$BASENAME To $DUNC Failure" >> "$LOGFILE$DATE.txt"
+    }
+}else {
+    echo "RESULT: source file and type is no match";
+    echo "RESULT: source file and type is no match" >> "$LOGFILE$DATE.txt";
+    echo "END" >> "$LOGFILE$DATE.txt";
+    echo "" >> "$LOGFILE$DATE.txt";exit 1
+}
+
+(Get-Date).ToString() >> "$LOGFILE$DATE.txt"
+echo "END" >> "$LOGFILE$DATE.txt"
+echo "" >> "$LOGFILE$DATE.txt"
+-------
+fromServerXcopy.ps1:
+-------
+$BACKUP_CONFIGDIR="D:\powershell\iisbackup-192.168.13.204-20210112\"
+$REMOTE_IPADDR="192.168.13.204"
+$CTYPE="dir"
+
+$REMOTE_SHARE_WEBDIR=cat $BACKUP_CONFIGDIR\applicationHost.config | 
+    Where-Object {$_ -match "physicalPath"} | 
+    ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] | 
+    ForEach-Object {$_ -split '"'};$tmp2[1] -replace "D:\\","\\$REMOTE_IPADDR\"}
+
+$REMOTE_WEBDIR=cat $BACKUP_CONFIGDIR\applicationHost.config |
+    Where-Object {$_ -match "physicalPath"} | 
+    ForEach-Object {$tmp=$_ -split "=";$tmp2=$tmp[2] |
+    ForEach-Object {$_ -split '"'};$tmp2[1]}
+
+$REMOTE_SOURCE_DIR=$REMOTE_SHARE_WEBDIR | foreach-object {"\\"+($_ -split "\\")[2]+"\"+($_ -split "\\")[3]} | Sort-Object chars -Unique
+$LOCAL_DST_DIR=$REMOTE_WEBDIR | foreach-object {($_ -split "\\")[0]+"\"+($_ -split "\\")[1]} | Sort-Object chars -Unique
+
+New-Item -ItemType "directory" -Path "$LOCAL_DST_DIR" -Force > $null
+if($?){
+    echo "start from $REMOTE_SOURCE_DIR copy to $LOCAL_DST_DIR "
+    .\xcopy.ps1 -SUNC $REMOTE_SOURCE_DIR -DUNC $LOCAL_DST_DIR -CTYPE $CTYPE
+    if($?){echo "copy successful,copy end."}
+}
+-------
+
+
+
+
+-------
+需求汇总：
+需求1：将时间戳转换为标准时间格式
+[DateTime]::FromFileTime(132547549886938765)
+2021年1月10日 20:23:08
+
