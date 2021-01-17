@@ -1,0 +1,64 @@
+#.net web环境准备：
+1. .net framework在iis安装之前安装，iis会在ISAPI筛选器中自动注册ASP .Net相应版本筛选器，
+如果在iis安装之后安装则不会在ISAPI筛选器中自动注册ASP，需要执行c:\Windows\Microsoft.NET\Framework64\v4.0.30319\>aspnet_regiis.exe -i
+进行注册，注册好后就可以在ISAPI筛选器中看到注册的相应版本Framework。(c:\Windows\Microsoft.NET\Framework64\v4.0.30319\>aspnet_regiis.exe -u是进行卸载)
+2. 注册成功后，在"ISAPI和CGI限制"中允许已经注册的Framework版本。
+
+密钥备份还原
+cd C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+A机
+aspnet_regiis -px "iisConfigurationKey" "D:\iisConfigurationKey.xml" -pri 
+aspnet_regiis -px "iisWasKey" "D:\iisWasKey.xml" -pri 
+
+B机
+cd C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+aspnet_regiis -pi "iisConfigurationKey" "D:\iisConfigurationKey.xml" 
+aspnet_regiis -pi "iisWasKey" "D:\iisWasKey.xml"
+
+★在IIS7+上导出所有应用程序池的方法:
+
+%windir%\system32\inetsrv\appcmd list apppool /config /xml > c:\apppools.xml
+
+ 
+
+这个命令会将服务器上全部的应用程序池都导出来,但有些我们是我们不需要的,要将他们删掉.比如:
+
+ 
+
+DefaultAppPool
+Classic .Net AppPool
+ 如果在导入时发现同名的应用程序池已经存在,那么导入就会失败.
+
+ 
+
+导入应用程序池的方法: 
+
+%windir%\system32\inetsrv\appcmd add apppool /in < c:\apppools.xml
+or
+type c:\apppools.xml | %windir%\system32\inetsrv\appcmd add apppool -
+ 
+
+这样就可以将全部的应用程序池都导入到另一个服务器中了.
+
+ 
+
+ 导出全部站点的方法:
+
+ %windir%\system32\inetsrv\appcmd list site /config /xml > c:\sites.xml
+
+ 
+
+ 同样,我们需要编辑sites.xml文件删除不需要的站点.如:
+
+ 
+
+Default Website
+ 
+
+ 
+
+导入站点的方法:
+
+ %windir%\system32\inetsrv\appcmd add site /in < c:\sites.xml
+or
+type c:\sites.xml | %windir%\system32\inetsrv\appcmd add site /in
