@@ -12,12 +12,11 @@
 #"十年之前:$($today.AddYears(-10).Year)年,我们是朋友."
 #日期格式化
 #"格式化日期：" + $today.ToString('yyyy-MM-dd')
+#删除7天前的文件
 $day=$($today.AddDays(-7).ToString('yyyy-MM-dd'))
  
 $LocalDir="D:\share_backup"
- 
-#删除7天前的文件
-
+$remoteFilterDir="D:\share_backup"
 
 function delfiles
 {
@@ -45,9 +44,9 @@ function delfilelist($RemoteDir=$False)
     if(! $RemoteDir){
 	echo "args is null"
     }
-    elseif($args -eq $remoteTarDir)
+    elseif($RemoteDir -eq $remoteFilterDir)
     {
-        Get-ChildItem -Path $args  -Recurse -ErrorAction SilentlyContinue -Filter *.tar.gz |Where-Object { $_.Extension -eq '.tar.gz' }| Where-Object -FilterScript {($_.LastWriteTime -lt $day) -and ($_.PsISContainer -eq $False)} |
+        Get-ChildItem -Path $args -Recurse -ErrorAction SilentlyContinue -Filter *.xml |Where-Object { $_.Extension -eq '.xml' }| Where-Object -FilterScript {($_.LastWriteTime -lt $day) -and ($_.PsISContainer -eq $False)} |
         Select-Object FullName|
         ForEach-Object {delfiles $_.FullName}
     }
