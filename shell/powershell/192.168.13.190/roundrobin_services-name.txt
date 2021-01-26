@@ -1,0 +1,12 @@
+TicketInbagService
+酒店无消费账单轮询
+HotelNoSaled
+HomsomERPPollingService
+InsuranceInputService
+InsuranceOutService
+IntInsuranceInputService
+IntlInsuranceOutService
+AirTicketCancelService
+TMS自动轮询服务
+TaskManager.WinService
+Mub2gTktService
