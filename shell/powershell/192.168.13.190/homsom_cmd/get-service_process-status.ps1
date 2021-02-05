@@ -1,4 +1,4 @@
-$DATETIME=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$DATETIME=(Get-Date).ToString('yyyy-MM-dd-HH:mm:ss')
 $LOG_ADDRESS="\\192.168.13.182\HomsomAuto\192.168.13.190\schtasks.log"
 
 #services status

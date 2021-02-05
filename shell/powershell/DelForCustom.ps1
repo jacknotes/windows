@@ -1,4 +1,19 @@
-﻿$today=Get-Date
+﻿param(
+    [Parameter(Mandatory=$True,HelpMessage="Input Source Directory or file")]
+    [Alias('SDIR')]
+    [string]$SUNC=$(throw "Source Directory or file is NULL"),
+
+    [Parameter(Mandatory=$True,HelpMessage="Input Source File Type [xml | hosts]")]
+    [Alias('filetype')]
+    [string]$TYPE=$(throw "Input Source File Type is NULL"),
+
+    [Parameter(Mandatory=$True,HelpMessage="Delete Begin Number of Days")]
+    [Alias('DeleteDay')]
+    [string]$DAYS=$(throw "Delete Begin Number of Days")
+)
+
+
+$today=Get-Date
 #"今天是：$today"
 #昨天
 #"昨天是:$($today.AddDays(-1))"
@@ -13,10 +28,8 @@
 #日期格式化
 #"格式化日期：" + $today.ToString('yyyy-MM-dd')
 #删除7天前的文件
-$day=$($today.AddDays(-7).ToString('yyyy-MM-dd'))
+$day=$($today.AddDays(-$DAYS).ToString('yyyy-MM-dd'))
  
-$LocalDir="D:\share_backup"
-$remoteFilterDir="D:\share_backup"
 
 function delfiles
 {
@@ -39,22 +52,28 @@ function delfiles
     }
 }
 
-function delfilelist($RemoteDir=$False)
+function delfilelist($Dirs=$False)
 {
-    if(! $RemoteDir){
+    if(! $Dirs){
 	echo "args is null"
     }
-    elseif($RemoteDir -eq $remoteFilterDir)
+    elseif($TYPE -eq "xml")
     {
-        Get-ChildItem -Path $args -Recurse -ErrorAction SilentlyContinue -Filter *.xml |Where-Object { $_.Extension -eq '.xml' }| Where-Object -FilterScript {($_.LastWriteTime -lt $day) -and ($_.PsISContainer -eq $False)} |
+        Get-ChildItem -Path $Dirs -Recurse -ErrorAction SilentlyContinue -Filter *.xml |Where-Object { $_.Extension -eq '.xml' }| Where-Object -FilterScript {($_.LastWriteTime -lt $day) -and ($_.PsISContainer -eq $False)} |
+        Select-Object FullName|
+        ForEach-Object {delfiles $_.FullName}
+    }
+    elseif($TYPE -eq "hosts")
+    {
+        Get-ChildItem -Path $Dirs -Recurse -ErrorAction SilentlyContinue -Filter *$TYPE* | Where-Object -FilterScript {($_.LastAccessTime -lt $day) -and ($_.PsISContainer -eq $False)} |
         Select-Object FullName|
         ForEach-Object {delfiles $_.FullName}
     }
     else
     {
-        Get-ChildItem -Path $RemoteDir  -Recurse -ErrorAction SilentlyContinue | Where-Object -FilterScript {($_.LastWriteTime -lt $day) } | Select-Object FullName |  
+        Get-ChildItem -Path $Dirs  -Recurse -ErrorAction SilentlyContinue | Where-Object -FilterScript {($_.LastWriteTime -lt $day) } | Select-Object FullName |  
         ForEach-Object {delfiles $_.FullName}
     }
 }
  
-delfilelist $LocalDir
+delfilelist $SUNC

@@ -1,11 +1,14 @@
 #!/bin/sh
-TASK_HOME="/windows/192.168.13.190"
+SCHTACK_HOST="192.168.13.190"
+TASK_HOME="/windows/${SCHTACK_HOST}"
 SCHTASKS_FILE="$TASK_HOME/schtasks.txt"
 SCHTASIS_FILE_HANDLER="$TASK_HOME/schtasks_handler.txt"
 SCHTASKS_LOGS="$TASK_HOME/schtasks.log" 
+LOGFILE="/tmp/taskslog.err"
 
-echo "`date`" > $SCHTASKS_LOGS 
-/usr/bin/dos2unix $SCHTASKS_FILE >& /dev/null
+echo "HOST: ${SCHTACK_HOST}" > $SCHTASKS_LOGS
+echo "`date +'%Y-%m-%d-%T'`" >> $SCHTASKS_LOGS 
+[ $? == 0 ] && /usr/bin/dos2unix $SCHTASKS_FILE >& /dev/null || echo "`date`: ${SCHTASKS_LOGS} is deny access" >>${LOGFILE}
 if [ $? == 0 ];then
 	/usr/bin/sed -n '/Folder: \\$/,/Folder: \\Microsoft$/{/Folder: \\Microsoft$/b;p}' $SCHTASKS_FILE > $SCHTASIS_FILE_HANDLER
 else
@@ -21,4 +24,3 @@ if [ $RESULT_COUNT -eq $COUNT ];then
 else
 	echo 'scheduler task running failure!' >> $SCHTASKS_LOGS
 fi
-echo '' >> $SCHTASKS_LOGS
