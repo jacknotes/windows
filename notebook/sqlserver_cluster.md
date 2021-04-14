@@ -39,5 +39,80 @@ select * from sys.dm_hadr_cluster
 
 
 
+----用户权限管理
+use reportDB
+go
+--创建登录用户(create login)--是全局的
+create login [dba] with password='abcd1234@', default_database=master
+create login [HS\0799] from windows
+--创建数据库用户(create user)dba并映射到登录用户dba上,一般数据库用户和登录用户名称一样，并且默认的架构为dbo，大多是dbo，只应用当前数据库
+-- select * from sys.schemas  --查看架构有哪些
+create user dba for login [dba] with default_schema=dbo
+create user [HS\0799] for login [HS\0799] with default_schema=dbo
+--在当前数据库上授予dba数据库用户db_owner组权限
+exec sp_addrolemember 'db_owner', 'dba'
+exec sp_addrolemember 'db_owner', 'hs\0799'
+--在当前数据库上删除dba数据库用户db_owner组权限
+--exec sp_droprolemember 'db_owner', 'dba'
+--在test01数据库上进行授权
+use test01 
+create user dba for login dba with default_schema=dbo
+exec sp_addrolemember 'db_owner', 'dba'
+--在test01数据库上删除用户授权并删除数据库用户dba,只删除此数据库用户dba
+--use test01 
+--exec sp_droprolemember 'db_owner', 'dba'
+--drop user dba 
+
+--授权/取消当前数据库用户dba对指定表的权限
+use test01
+create table test01
+(
+	id int,
+	name varchar(50)
+)
+create user dba for login dba with default_schema=dbo
+GRANT SELECT,UPDATE ON test01 TO dba
+revoke UPDATE ON test01 TO dba
+deny select on test01 to dba
+--简单来说，deny就是将来都不许给，revoke就是收回已经给予的
+
+--获取所有数据库用户名
+SELECT * FROM Sysusers
+
+
+--禁用登陆帐户
+alter login dba disable
+--启用登陆帐户
+alter login dba enable
+--登陆帐户改名
+alter login dba with name=dba_tom
+--登陆帐户改密码： 
+alter login dba with password='aabb@ccdd'
+
+--数据库用户改名： 
+alter user dba with name=dba_tom
+--更改数据库用户 defult_schema： 
+alter user dba with default_schema=sales
+
+--删除数据库用户： 
+drop user dba
+--删除 SQL Server登陆帐户： 
+drop login dba
+drop login [hs\0799]
+
+--管理会话
+select * from sys.dm_exec_connections where session_id=54
+select * from sys.dm_exec_sessions where login_name='dba'
+kill 54
+
+--删除数据库用户： 
+drop user dba
+--删除 SQL Server登陆帐户： 
+drop login dba
+
+--管理会话
+select * from sys.dm_exec_connections where session_id=54
+select * from sys.dm_exec_sessions where login_name='dba'
+kill 54
 
 </pre>
