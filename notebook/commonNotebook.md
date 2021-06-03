@@ -27,6 +27,8 @@ DFS01、DFS02:
 6. 在命名空间名称上右键开启“客户端故障回复到首先目标”，此功能用于在命名空间服务器回归到正常状态时，客户端会连接首先服务器（此服务器在建立复制组时会提示选择）
 7. 也可按需对复制组进行计划复制，默认复制是全天候复制。
 
-
-
+#wsus client sync command 
+wuauclt /resetauthorization /detectnow
+wuauclt /detectnow
+wuauclt /reportnow
 
