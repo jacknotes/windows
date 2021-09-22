@@ -554,6 +554,9 @@ if($?){
 $client=Get-Content .\hostname.txt
 foreach($i in $client){Get-WmiObject -query "select * from win32_product where name like 'eTerm%'" -ComputerName $i | select-object __server,name,version| format-table >> \\172.168.2.219\share\tmp\eterm.txt}
 
+--通过调用命令使用ciminstance代码块执行安装包查看
+Invoke-Command  -computername ( Get-Content  E:\1234.txt | where {$_.length -ne 0}) -ErrorAction Ignore -ScriptBlock {Get-CimInstance -ClassName win32_product  | Where-Object name -eq "企业QQ" | select-object name,version,PSComputerName} | format-table
+
 Get-WmiObject -class win32_product -Filter "name like 'eTerm%'"
 Get-WmiObject -query "select * from win32_product where name like 'eTerm%'" | select-object __server,name,version | format-table | Export-Csv -Append f:\test.csv
 
@@ -572,5 +575,32 @@ PS D:\BaiduNetdiskDownload\周杰伦歌曲\123>  for($i=0;$i -le $dirname.length
 command:
 $dirname=Get-ChildItem -dir | select name
 for($i=0;$i -le $dirname.length-1; $i++){ls -path $dirname[$i].name -Recurse | mv -Destination "D:\BaiduNetdiskDownload\周杰伦歌曲\123" -Force -ErrorAction Ignore;Remove-Item -Force -Recurse -ErrorAction Ignore $dirname[$i].name}
+
+
+
+--202109221453
+-- 锁定屏幕
+rundll32.exe user32.dll,LockWorkStation
+
+------powershell5.0及以上
+--在 Windows Server 上，以管理员身份将功能名称与 Install-WindowsFeature cmdlet 一起使用。 例如
+Install-WindowsFeature -Name ActiveDirectory
+--在 Windows 10 上，Windows 管理模块作为 Windows 可选功能或 Windows 功能提供 。 必须使用“以管理员身份运行”从提升的会话运行以下命令 。
+对于 Windows 可选功能
+Get-WindowsOptionalFeature –Online
+若要安装功能，请执行以下操作：
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Management-PowerShell
+--对于 Windows 功能
+若要获取 Windows 功能的列表，请运行以下命令：
+Get-WindowsCapability -online
+请注意，功能包的名称以 ~~~~0.0.1.0 结尾。 必须使用全名才能安装功能：
+Add-WindowsCapability -Online -Name Rsat.ServerManager.Tools~~~~0.0.1.0
+
+
+
+
+
+
+
 </pre>
 
