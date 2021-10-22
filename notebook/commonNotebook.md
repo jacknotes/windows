@@ -598,8 +598,62 @@ Add-WindowsCapability -Online -Name Rsat.ServerManager.Tools~~~~0.0.1.0
 
 
 
+--202109230910
+--------------
+# DNS备份脚本简介
+## 脚本基本信息：
+1. 脚本类型：Powershell
+2. 脚本名称：backupDNS.ps1
+3. 需要模块：`DnsServer`
+
+## 脚本使用方式：
+使用任务计划程序调用该脚本，之后会在DNS服务器上的DNS目录下生成AD区域的备份文件。
+计划任务-操作选择`启动程序`：`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`
+参数选择：`-File "<脚本文件路径>" -ComputerName <DNS服务器名称> -ErrorAction SilentlyContinue`
+
+# 恢复DNS区域
+1. 将DNS区域备份文件复制到DNS服务器（homsom-dc-03.hs.com）上的DNS文件夹下（默认：`c:\windows\system32\dns`）
+2. 运行命令：`dnscmd <远程DNS服务器FQDN，如果在DNS服务器上运行，则可省略> /ZoneAdd <ZoneName> /Primary /file <备份的区域文件名> /load`
+3. 打开DNS服务器管理器，将相应区域的类型更改为：Active Directory 集成区域，动态类型更改为：安全
+
+# 附件：脚本
+```powershell
+[CmdletBinding()]
+Param(
+    [Parameter(Mandatory=$True,Position=1)]
+    [string]$ComputerName
+)
+
+$Prefix = "Dns - " + (Get-Date -Format "yyyyMMdd") + " - " 
+$Suffix = ".bak"
+$Zones = Get-DnsServerZone -ComputerName $ComputerName
+
+foreach($zone in $Zones){
+    $zonename = $zone.ZoneName
+    if ($zonename -eq "TrustAnchors"){
+        $zonename = "_msdcs.hs.com"
+    }
+    $filename = $Prefix + $zonename + $Suffix
+    Export-DnsServerZone -FileName $filename -Name $zonename -ComputerName $ComputerName
+}
+```
+# Example（脚本使用）
+1. 在操作主机上安装DNS server角色（OS版本不低于server2012）
+2. 将脚本文件复制到`c:\Scripts`
+3. 新建计划任务：
+   名称：BackupDNS
+   运行任务的账户：hs\opsadmin，不管用户是否登录都要运行
+   触发器：每天 16:50
+   操作：启动程序`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`; 添加参数：`-File "C:\Scripts\backupDNS.ps1" -ComputerName homsom-dc02.hs.com -ErrorAction SilentlyContinue`
+--------------
 
 
+#windows10域中桌面黑屏处理方法：
+1. 在"C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Themes"目录下删除"CachedFiles"目录，或者"CachedFiles"目录下的桌面背景图片。
+切记不可删除"C:\Users\0799\AppData\Roaming\Microsoft\Windows\Themes"下的"TranscodedWallpaper"文件，此文件决定桌面是否显示，如果删除只能去其它电脑复制一份。
+2. 执行组策略更新，gpupdate /force。
+3. 桌面背景图片显示出来了，但显示有矩阵点，此时应该注销重新登录即可解决。logoff。
+4. 如果将"C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Themes"目录下所有删除，则可以去其它电脑复制一份到有问题电脑即可。
 
 
 </pre>
