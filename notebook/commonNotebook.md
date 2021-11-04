@@ -557,6 +557,11 @@ foreach($i in $client){Get-WmiObject -query "select * from win32_product where n
 --通过调用命令使用ciminstance代码块执行安装包查看
 Invoke-Command  -computername ( Get-Content  E:\1234.txt | where {$_.length -ne 0}) -ErrorAction Ignore -ScriptBlock {Get-CimInstance -ClassName win32_product  | Where-Object name -eq "企业QQ" | select-object name,version,PSComputerName} | format-table
 
+--通过格式化方式建立名称
+$session=130..132 | foreach { "HS-UA-TSJ-{0:D4}" -F $PSItem } | New-PSSession -ThrottleLimit 50 -ErrorAction Ignore
+Invoke-Command -Session $Session -ScriptBlock {Get-CimInstance -ClassName win32_product  | Where-Object name -eq "企业QQ" | select-object name,version,PSComputerName} | format-table
+
+
 Get-WmiObject -class win32_product -Filter "name like 'eTerm%'"
 Get-WmiObject -query "select * from win32_product where name like 'eTerm%'" | select-object __server,name,version | format-table | Export-Csv -Append f:\test.csv
 
