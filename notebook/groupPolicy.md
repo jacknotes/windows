@@ -102,35 +102,7 @@ SpecialPollInterval 600
 注：其它参数按需调整
 --------------------------------------
 
-2) 策略名称：desktop{桌面背景}
-作用域：hs.com、Authenticated Users、未启用WMI筛选器
-策略配置：
-1. 计算机配置——策略——管理模板——
-	控制面板/个性化:
---------------------------------------
-策略 设置 
-屏幕保护程序超时 已启用  
-	启用屏幕保护程序之前等待的秒数 
-	秒:  900 
- 
-策略 设置
-阻止更改屏幕保护程序 已启用  
-阻止更改主题 已启用  
-阻止更改桌面背景 已启用 
---------------------------------------
-	桌面/桌面:	
---------------------------------------
-不允许更改 已启用  
-禁用 Active Desktop 已禁用  
-启用 Active Desktop 已启用  
-允许使用 HTML 和 JPEG 墙纸 
- 
-策略 设置 注释 
-桌面墙纸 已启用  
-墙纸名称: \\192.168.10.250\desktop\桌面2012.7.jpg 
---------------------------------------
-
-3) 策略名称：EnableRemoteDesktop{添加域远程桌面用户组到本地用户组中}
+2) 策略名称：EnableRemoteDesktop{添加域远程桌面用户组到本地用户组中}
 作用域：hs.com、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 用户配置——首选项——控制面板设置——本地用户和组:
@@ -138,7 +110,7 @@ SpecialPollInterval 600
 添加本地组(名称: Remote Desktop Users (内置)——不要为当前用户配置——添加成员"HS\远程桌面用户"到"Remote Desktop Users"
 --------------------------------------
 
-4) 策略名称：EnableUSB{开启USB功能，应用匹配条件的计算机用户}
+3) 策略名称：EnableUSB{开启USB功能，应用匹配条件的计算机用户}
 作用域：hs.com\Headquarter、指定的域用户组，用户，计算机、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——管理模板——
@@ -158,7 +130,7 @@ SpecialPollInterval 600
 所有可移动存储类: 拒绝所有权限 已禁用 
 --------------------------------------
 
-5) 策略名称：LocalAdmin{加入"hs\domain admins","hs\普通本地管理员"到本地管理员组中}
+4) 策略名称：LocalAdmin{加入"hs\domain admins","hs\普通本地管理员"到本地管理员组中}
 作用域：hs.com\Headquarter、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 用户配置——首选项——控制面板设置——本地用户和组:
@@ -166,7 +138,7 @@ SpecialPollInterval 600
 添加本地组(名称: administrators (内置)——不要为当前用户配置——添加成员"HS\domain admins"和"hs\普通本地管理员",到"administrators"
 --------------------------------------
 	
-6) 策略名称：AppLocker{限制应用程序}
+5) 策略名称：AppLocker{限制应用程序}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、启用WMI筛选器{匹配条件，匹配到筛选器的将会应用此策略}
 WMI筛选器配置: 
 名称: AppLocker
@@ -185,7 +157,7 @@ windows安装程序规则——右键——创建新规则——选择内置管�
 可执行规则——右键——创建特定的规则，动作为允许或拒绝，路径为特定的路径或者发布者为谁进行限定程序的执行{组策略分为集合类型和单属性类型,如果是集合类型且是相同规则但动作不一样则拒绝优先级大于允许，单属性类型则按照顺序执行}
 --------------------------------------
 
-7) 策略名称：EnablePSRemoting{开启远程管理，可使用powershell进行远程管理}
+6) 策略名称：EnablePSRemoting{开启远程管理，可使用powershell进行远程管理}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——windows设置——
@@ -205,7 +177,7 @@ Windows Remote Management (WS-Management) (启动模式: 自动)
 IPv4 筛选器: * 
 --------------------------------------
 
-8) 策略名称：EnableRPC{开启RPC功能，可以查看客户端日志}
+7) 策略名称：EnableRPC{开启RPC功能，可以查看客户端日志}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——windows设置——
@@ -220,7 +192,7 @@ Remote Procedure Call (RPC) (启动模式: 自动)
 设定允许RPC通过的端口及服务，默认在启动系统服务后默认自己会创建
 --------------------------------------
 
-9) 策略名称：FilePermissions{配置指定文件夹及子文件夹权限}
+8) 策略名称：FilePermissions{配置指定文件夹及子文件夹权限}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——windows设置——安全设置——文件系统:
@@ -230,7 +202,7 @@ Remote Procedure Call (RPC) (启动模式: 自动)
 	%ProgramFiles%\Travelsky：配置这个文件或文件夹，然后: 向所有子文件夹和文件传播继承权限，并配置添加用户组有修改权限
 --------------------------------------
 
-10) 策略名称：IESettings{配置IE浏览器设置,通过组策略来配置信任的站点以及自定义级别的特定配置}
+9) 策略名称：IESettings{配置IE浏览器设置,通过组策略来配置信任的站点以及自定义级别的特定配置}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——管理模板——
@@ -252,7 +224,7 @@ ActiveX 控件自动提示 已启用
 Java 权限 已启用 
 --------------------------------------
 
-11) 策略名称：RemoteDesktop{通过组策略来开启远程桌面端口}
+10) 策略名称：RemoteDesktop{通过组策略来开启远程桌面端口}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——Windows设置——
@@ -266,7 +238,7 @@ Java 权限 已启用
 允许用户通过使用远程桌面服务进行远程连接 已启用 
 --------------------------------------
 
-12) 策略名称：UACSettings{用于打开运行窗口后就是以管理员身份运行}
+11) 策略名称：UACSettings{用于打开运行窗口后就是以管理员身份运行}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——Windows设置——安全设置——本地策略/安全选项
@@ -276,7 +248,7 @@ Java 权限 已启用
 用户帐户控制: 以管理员批准模式运行所有管理员 已禁用 
 --------------------------------------
 
-13) 策略名称：UsbSettings{禁用USB程序}
+12) 策略名称：UsbSettings{禁用USB程序}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——管理模板——
@@ -291,7 +263,7 @@ Java 权限 已启用
 禁止安装可移动设备 已禁用 
 --------------------------------------
 
-14) 策略名称：WindowsUpdate{配置启用windwos更新和后台空闲传输服务，用于windows更新使用,此开关一关则关闭更新服务}
+13) 策略名称：WindowsUpdate{配置启用windwos更新和后台空闲传输服务，用于windows更新使用,此开关一关则关闭更新服务}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——windows设置——
@@ -308,7 +280,7 @@ Windows Update (启动模式: 自动)
 允许自动更新立即安装 已禁用 
 --------------------------------------
 
-15) 策略名称：WirelessSettings{用于禁用用户电脑上本地网卡的连接共享、本地网卡管理器新建网桥功能}
+14) 策略名称：WirelessSettings{用于禁用用户电脑上本地网卡的连接共享、本地网卡管理器新建网桥功能}
 作用域：hs.com\Headquarter\Computers、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——windows设置——
@@ -319,7 +291,7 @@ Windows Update (启动模式: 自动)
 禁止在你的 DNS 域网络上安装和配置网桥 已启用 
 --------------------------------------
 
-16) 策略名称：Power{用于关闭控制面板——电源选项——选择电源按钮的功能——关机设置中关闭“启用快速启动（推荐）”功能，原因为有些电脑第一次开机启动会黑屏，所以关闭}
+15) 策略名称：Power{用于关闭控制面板——电源选项——选择电源按钮的功能——关机设置中关闭“启用快速启动（推荐）”功能，原因为有些电脑第一次开机启动会黑屏，所以关闭}
 作用域：hs.com\Headquarter\Computers\Desktops、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——windows设置——注册表——
@@ -333,7 +305,7 @@ Windows Update (启动模式: 自动)
 数值数据 0x0 (0) 
 --------------------------------------
 
-17) 策略名称：WSUS - Desktop - Ring 1
+16) 策略名称：WSUS - Desktop - Ring 1
 作用域：hs.com\Headquarter\Computers\Desktops\特定部门计算机、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 计算机配置——策略——管理模板——
@@ -390,7 +362,7 @@ Windows Update (启动模式: 自动)
 	在预览版或功能更新发布后，延迟以下天数后再予以接收: 365 
 --------------------------------------
 
-18) 策略名称：DesktopSettings{针对用户配置桌面墙纸策略}
+17) 策略名称：DesktopSettings{针对用户配置桌面墙纸策略}
 作用域：hs.com\Headquarter\Users、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 用户配置——策略——管理模板——
@@ -426,7 +398,7 @@ Windows Update (启动模式: 自动)
 	墙纸样式: 拉伸 
 --------------------------------------
 
-19) 策略名称：GroupPolicySettings{设置用户更新组策略时间}
+18) 策略名称：GroupPolicySettings{设置用户更新组策略时间}
 作用域：hs.com\Headquarter\Users、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 用户配置——策略——管理模板——
@@ -444,7 +416,7 @@ Windows Update (启动模式: 自动)
 	分钟: 30 
 --------------------------------------
 
-20) 策略名称：Sceensaver32bit{针对32位系统设置屏幕保护程序}
+19) 策略名称：Sceensaver32bit{针对32位系统设置屏幕保护程序}
 作用域：hs.com\Headquarter\Users、Authenticated Users、未启用WMI筛选器
 策略配置：
 1. 用户配置——策略——管理模板——
@@ -455,7 +427,7 @@ Windows Update (启动模式: 自动)
 	可执行的屏幕保护程序的名称 \\192.168.10.250\desktop\scrnsave1.scr 
 --------------------------------------
 
-21) 策略名称：EnableUSBForGoingout{针对外带用户和计算机设置策略，使其可以使用USB设备}
+20) 策略名称：EnableUSBForGoingout{针对外带用户和计算机设置策略，使其可以使用USB设备}
 作用域：hs.com\Headquarter\Users\外带账户、Authenticated Users、未启用WMI筛选器
 作用域：hs.com\Headquarter\Computers\Laptops\有外带需求、Authenticated Users、未启用WMI筛选器
 策略配置：
