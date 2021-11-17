@@ -661,5 +661,70 @@ foreach($zone in $Zones){
 4. 如果将"C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Themes"目录下所有删除，则可以去其它电脑复制一份到有问题电脑即可。
 
 
+
+#20211116--增加powershell卸载软件方法
+--获取powershell驱动器
+Get-PSDrive
+--添加powershell驱动器
+New-PSDrive -Name Uninstall -PSProvider Registry -Root HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+--软件安装
+在远程安装时，请使用通用命名约定 (UNC) 网络路径指定 .msi 包的路径，因为 WMI 子系统并不了解 PowerShell 路径。 
+例如，若要在远程计算机 PC01 上安装位于网络共享 \\AppServ\dsp 中的 NewPackage.msi 包，请在 PowerShell 提示符下键入以下命令：
+Invoke-CimMethod -ClassName Win32_Product -MethodName Install -Arguments @{PackageLocation='\\AppSrv\dsp\NewPackage.msi'}
+--软件卸载
+Get-CimInstance -Class Win32_Product -Filter "name='腾讯企点'" | Invoke-CimMethod -MethodName Uninstall
+--获取卸载字符串后进行卸载
+--32位和64位
+> get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher
+> get-childitem "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher
+DisplayName                 UninstallString                                                                             Publisher
+-----------                 ---------------                                                                             ---------
+Adobe Flash Player 34 PPAPI C:\WINDOWS\SysWOW64\Macromed\Flash\FlashUtil32_34_0_0_164_pepper.exe -maintain pepperplugin Adobe
+Adobe Acrobat XI Pro        MsiExec.exe /I{AC76BA86-1033-FFFF-7760-000000000006}                                        Adobe Systems
+----从获取的卸载符串中进行卸载,将参数/I改成/X,因为/X是卸载，而/I是安装
+ >& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{AC76BA86-1033-FFFF-7760-000000000006}  /quiet /norestart"
+--获取返回的对象类型
+> Get-Service | gm
+TypeName:System.ServiceProcess.ServiceController
+--查看相关对象的命令
+> Get-Command -ParameterType ServiceController
+CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Cmdlet          Get-Service                                        3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Restart-Service                                    3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Resume-Service                                     3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Set-Service                                        3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Start-Service                                      3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Stop-Service                                       3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Suspend-Service                                    3.1.0.0    Microsoft.PowerShell.Management
+--Head和Tail都可以用Select-Object用-First和-Last参数来模拟。
+> get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Select-Object -First 1 | gm
+--排序
+Get-ChildItem |
+  Sort-Object -Property LastWriteTime, Name -Descending |
+  Format-Table -Property LastWriteTime, Name
+
+--获取对象的属性名称
+> get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Select-Object -First 1 | ForEach-Object -Process { $_.getvaluenames()}
+DisplayName
+DisplayIcon
+UninstallString
+DisplayVersion
+URLInfoAbout
+Publisher
+InstallLocation
+--获取属性的值 
+>get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" |  ForEach-Object -Process { $_.getvalue('UninstallString')}
+--字符串处理
+$bb="MsiExec.exe /I{AC76BA86-1033-FFFF-7760-000000000006}"
+$cc=$bb.Replace('/I','/X')
+$dd='& "C:\Windows\System32\cmd.exe" /c ','"',$cc.ToString(),' /quiet /norestart"' -join ''
+-- $ee=-Join('& "C:\Windows\System32\cmd.exe" /c ','"',$cc.ToString(),' /quiet /norestart"')
+--Invoke-Expression调用命令表达式来执行命令
+invoke-command -session $session -scriptblock { param($v) $command=$v; Invoke-Expression $command } -ArgumentList $dd
+
+
+
+
 </pre>
 

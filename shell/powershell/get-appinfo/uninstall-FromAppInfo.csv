@@ -1,0 +1,3 @@
+computer,softwarename,uninstallstring,publisher,isuninstall
+HS-UA-TSJ-0120,Adobe Acrobat XI Pro,"& ""C:\Windows\System32\cmd.exe"" /c ""MsiExec.exe /X{AC76BA86-1033-FFFF-7760-000000000006} /quiet /norestart""",Adobe Systems,yes
+HS-UA-TSJ-0131,Adobe Acrobat XI Pro,"& ""C:\Windows\System32\cmd.exe"" /c ""MsiExec.exe /X{AC76BA86-1033-FFFF-7760-000000000006} /quiet /norestart""",Adobe Systems,yes
