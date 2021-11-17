@@ -1,4 +1,13 @@
 #REFERENCE: https://github.com/Dwarven/vlmcsd
+
+<pre>
+--KMS服务器搭建
+wget https://raw.githubusercontent.com/Dwarven/vlmcsd/master/binaries/Linux/intel/static/vlmcsd-x64-musl-static -O KMS-server
+ln -sv KMS-server /usr/local/KMS-server
+chmod u+x /usr/local/KMS-server
+nohup KMS-server &
+</pre>
+
 --windows激活方法
 <pre>
  slmgr.vbs -upk
