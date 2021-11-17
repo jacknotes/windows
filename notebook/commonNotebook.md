@@ -675,7 +675,7 @@ Invoke-CimMethod -ClassName Win32_Product -MethodName Install -Arguments @{Packa
 Get-CimInstance -Class Win32_Product -Filter "name='腾讯企点'" | Invoke-CimMethod -MethodName Uninstall
 --获取卸载字符串后进行卸载
 --32位和64位
-> get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher
+> get-childitem "hklm:\software\microsoft\windows\currentversion\uninstall" | foreach { get-itemproperty $_.pspath} |where { $_.publisher -match "$publisher"}
 > get-childitem "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher
 DisplayName                 UninstallString                                                                             Publisher
 -----------                 ---------------                                                                             ---------
@@ -720,7 +720,15 @@ $bb="MsiExec.exe /I{AC76BA86-1033-FFFF-7760-000000000006}"
 $cc=$bb.Replace('/I','/X')
 $dd='& "C:\Windows\System32\cmd.exe" /c ','"',$cc.ToString(),' /quiet /norestart"' -join ''
 -- $ee=-Join('& "C:\Windows\System32\cmd.exe" /c ','"',$cc.ToString(),' /quiet /norestart"')
---Invoke-Expression调用命令表达式来执行命令
+-get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher-Invoke-Expression调用命令表达式来执行命令
+wershell驱动器
+New-PSDrive -Name Uninstall -PSProvider Registry -Root HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+--查找支持无需特殊配置即可进行远程处理的 cmdlet 具有 ComputerName 参数，但不具有 Session 参数
+Get-Command | where { $_.parameters.keys -contains "ComputerName" -and $_.parameters.keys -notcontains "Session"}
+--通过跃点访问第三个服务器，将凭据传输给第三个服务器
+Invoke-Command -ComputerName hs-ua-tsj-0131  -Credential $cred -ScriptBlock{hostname; Invoke-Command -ComputerName hs-ua-tsj-0120 -Credential $Using:cred -ScriptBlock {hostname}}
+HS-UA-TSJ-0131
+HS-UA-TSJ-0120
 invoke-command -session $session -scriptblock { param($v) $command=$v; Invoke-Expression $command } -ArgumentList $dd
 
 
