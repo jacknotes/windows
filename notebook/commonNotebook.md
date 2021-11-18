@@ -731,6 +731,31 @@ HS-UA-TSJ-0131
 HS-UA-TSJ-0120
 invoke-command -session $session -scriptblock { param($v) $command=$v; Invoke-Expression $command } -ArgumentList $dd
 
+--在远程会话中增加共享
+net use \\172.168.2.219\share password /user:user@domain
+\\172.168.2.219\share\homsom\QiDian5.0.0.18520.exe /s
+----静默安装exe文件
+\\172.168.2.130\d\QiDian5.0.0.18520\QiDian5.0.0.18520.exe /s
+--获取安装文件卸载字符器
+get-childitem -Path "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('InstallLocation') -match 'qidian'}
+--卸载有弹窗的软件
+Start-Job -ScriptBlock {& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{E354F39D-4B67-4B4F-914F-FFAF55D6F5FF} /quiet /norestart"}
+[hs-ua-tsj-0120]: PS C:\Users\0799\Documents> Get-Process msiexec
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+    257      11     6492      11404       0.03   5564   0 msiexec
+    518      22     7628      20444       1.98   6988   0 msiexec
+    437      17     8948      19736       0.34   7632   0 msiexec
+[hs-ua-tsj-0120]: PS C:\Users\0799\Documents> Get-Process msiexec  | Stop-Process -Force
+[hs-ua-tsj-0120]: PS C:\Users\0799\Documents> Get-Job
+Id     Name            PSJobTypeName   State         HasMoreData     Location             Command
+--     ----            -------------   -----         -----------     --------             -------
+1      Job1            BackgroundJob   Completed     True            localhost            & "C:\Windows\System32...
+--以后台job方式运行
+Start-Job -ScriptBlock {& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{E354F39D-4B67-4B4F-914F-FFAF55D6F5FF} /quiet /norestart"} ; Start-Sleep -Seconds 60 ; Get-Process msiexec  | Stop-Process -Force;
+Start-Job -ScriptBlock { \\172.168.2.130\d\QiDian5.0.0.18520\QiDian5.0.0.18520.exe /s}
+
+
 
 
 
