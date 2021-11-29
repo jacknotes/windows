@@ -667,5 +667,103 @@ foreach($zone in $Zones){
 4. 
 
 
+
+#20211116--增加powershell卸载软件方法
+--获取powershell驱动器
+Get-PSDrive
+--添加powershell驱动器
+New-PSDrive -Name Uninstall -PSProvider Registry -Root HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+--软件安装
+在远程安装时，请使用通用命名约定 (UNC) 网络路径指定 .msi 包的路径，因为 WMI 子系统并不了解 PowerShell 路径。 
+例如，若要在远程计算机 PC01 上安装位于网络共享 \\AppServ\dsp 中的 NewPackage.msi 包，请在 PowerShell 提示符下键入以下命令：
+Invoke-CimMethod -ClassName Win32_Product -MethodName Install -Arguments @{PackageLocation='\\AppSrv\dsp\NewPackage.msi'}
+--软件卸载
+Get-CimInstance -Class Win32_Product -Filter "name='腾讯企点'" | Invoke-CimMethod -MethodName Uninstall
+--获取卸载字符串后进行卸载
+--32位和64位
+> get-childitem "hklm:\software\microsoft\windows\currentversion\uninstall" | foreach { get-itemproperty $_.pspath} |where { $_.publisher -match "$publisher"}
+> get-childitem "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher
+DisplayName                 UninstallString                                                                             Publisher
+-----------                 ---------------                                                                             ---------
+Adobe Flash Player 34 PPAPI C:\WINDOWS\SysWOW64\Macromed\Flash\FlashUtil32_34_0_0_164_pepper.exe -maintain pepperplugin Adobe
+Adobe Acrobat XI Pro        MsiExec.exe /I{AC76BA86-1033-FFFF-7760-000000000006}                                        Adobe Systems
+----从获取的卸载符串中进行卸载,将参数/I改成/X,因为/X是卸载，而/I是安装
+ >& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{AC76BA86-1033-FFFF-7760-000000000006}  /quiet /norestart"
+--获取返回的对象类型
+> Get-Service | gm
+TypeName:System.ServiceProcess.ServiceController
+--查看相关对象的命令
+> Get-Command -ParameterType ServiceController
+CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Cmdlet          Get-Service                                        3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Restart-Service                                    3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Resume-Service                                     3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Set-Service                                        3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Start-Service                                      3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Stop-Service                                       3.1.0.0    Microsoft.PowerShell.Management
+Cmdlet          Suspend-Service                                    3.1.0.0    Microsoft.PowerShell.Management
+--Head和Tail都可以用Select-Object用-First和-Last参数来模拟。
+> get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Select-Object -First 1 | gm
+--排序
+Get-ChildItem |
+  Sort-Object -Property LastWriteTime, Name -Descending |
+  Format-Table -Property LastWriteTime, Name
+
+--获取对象的属性名称
+> get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Select-Object -First 1 | ForEach-Object -Process { $_.getvaluenames()}
+DisplayName
+DisplayIcon
+UninstallString
+DisplayVersion
+URLInfoAbout
+Publisher
+InstallLocation
+--获取属性的值 
+>get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" |  ForEach-Object -Process { $_.getvalue('UninstallString')}
+--字符串处理
+$bb="MsiExec.exe /I{AC76BA86-1033-FFFF-7760-000000000006}"
+$cc=$bb.Replace('/I','/X')
+$dd='& "C:\Windows\System32\cmd.exe" /c ','"',$cc.ToString(),' /quiet /norestart"' -join ''
+-- $ee=-Join('& "C:\Windows\System32\cmd.exe" /c ','"',$cc.ToString(),' /quiet /norestart"')
+-get-childitem "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('Publisher') -like '*adobe*'} | foreach { get-itemproperty $_.pspath} | Select-Object -Property DisplayName,UninstallString,Publisher-Invoke-Expression调用命令表达式来执行命令
+wershell驱动器
+New-PSDrive -Name Uninstall -PSProvider Registry -Root HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+--查找支持无需特殊配置即可进行远程处理的 cmdlet 具有 ComputerName 参数，但不具有 Session 参数
+Get-Command | where { $_.parameters.keys -contains "ComputerName" -and $_.parameters.keys -notcontains "Session"}
+--通过跃点访问第三个服务器，将凭据传输给第三个服务器
+Invoke-Command -ComputerName hs-ua-tsj-0131  -Credential $cred -ScriptBlock{hostname; Invoke-Command -ComputerName hs-ua-tsj-0120 -Credential $Using:cred -ScriptBlock {hostname}}
+HS-UA-TSJ-0131
+HS-UA-TSJ-0120
+invoke-command -session $session -scriptblock { param($v) $command=$v; Invoke-Expression $command } -ArgumentList $dd
+
+--在远程会话中增加共享
+net use \\172.168.2.219\share password /user:user@domain
+\\172.168.2.219\share\homsom\QiDian5.0.0.18520.exe /s
+----静默安装exe文件
+\\172.168.2.130\d\QiDian5.0.0.18520\QiDian5.0.0.18520.exe /s
+--获取安装文件卸载字符器
+get-childitem -Path "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('InstallLocation') -match 'qidian'}
+--卸载有弹窗的软件
+Start-Job -ScriptBlock {& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{E354F39D-4B67-4B4F-914F-FFAF55D6F5FF} /quiet /norestart"}
+[hs-ua-tsj-0120]: PS C:\Users\0799\Documents> Get-Process msiexec
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+    257      11     6492      11404       0.03   5564   0 msiexec
+    518      22     7628      20444       1.98   6988   0 msiexec
+    437      17     8948      19736       0.34   7632   0 msiexec
+[hs-ua-tsj-0120]: PS C:\Users\0799\Documents> Get-Process msiexec  | Stop-Process -Force
+[hs-ua-tsj-0120]: PS C:\Users\0799\Documents> Get-Job
+Id     Name            PSJobTypeName   State         HasMoreData     Location             Command
+--     ----            -------------   -----         -----------     --------             -------
+1      Job1            BackgroundJob   Completed     True            localhost            & "C:\Windows\System32...
+--以后台job方式运行
+Start-Job -ScriptBlock {& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{E354F39D-4B67-4B4F-914F-FFAF55D6F5FF} /quiet /norestart"} ; Start-Sleep -Seconds 60 ; Get-Process msiexec  | Stop-Process -Force;
+Start-Job -ScriptBlock { \\172.168.2.130\d\QiDian5.0.0.18520\QiDian5.0.0.18520.exe /s}
+
+
+
+
+
 </pre>
 
