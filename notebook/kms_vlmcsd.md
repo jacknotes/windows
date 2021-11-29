@@ -10,6 +10,22 @@
 如果不想用kms了，可以重置回原来的状态
 slmgr.vbs -ckms  //清除系统KMS信息
 slmgr.vbs -rearm //重置计算机的授权状态
+
+
+#KMS客户端自动激活
+使用vlmcsd搭建激活服务器后，通过配置SRV记录，可以实现加域计算机自动激活（实际上只要设置DNS地址为域控服务器就可以激活），方法如下：
+在dns中新建srv记录：
+正向查找区域-新建其他记录-SRV记录--{设定服务名_vlmcs、协议为_tcp、优秀级为0、权重为0、端口号为1688、ip地址为KMS服务器地址}
+
+新建完成后，在客户端验证srv记录是否可以正确解析：
+nslookup -q=srv _vlmcs._tcp.hs.com. 192.168.10.250
+_vlmcs._tcp.hs.com      SRV service location:
+          priority       = 0
+          weight         = 0
+          port           = 1688
+          svr hostname   = 192.168.13.236
+可以成功返回如上结果，证明srv记录已正确配置，客户端在加域后可以自动激活（OS和Office都可以，前提是客户端是 volume_kmsclient类型），无需运行 slmgr /ato命令
+
 </pre>
 
 
