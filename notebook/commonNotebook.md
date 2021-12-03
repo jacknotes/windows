@@ -664,7 +664,6 @@ foreach($zone in $Zones){
 1. 值类型策略按照策略的顺序优先级执行
 2. 集合类型将多个相同的组策略集合合并成一个集合，如果其中有两个相同的规则，但动作是允许和拒绝动作，则拒绝动作优先级大于允许动作。
 3. 计算机配置——策略——管理模板——Windows 组件/远程桌面服务/远程桌面会话主机/连接 可以开启用户端的远程桌面功能。
-4. 
 
 
 
@@ -761,7 +760,9 @@ Id     Name            PSJobTypeName   State         HasMoreData     Location   
 Start-Job -ScriptBlock {& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{E354F39D-4B67-4B4F-914F-FFAF55D6F5FF} /quiet /norestart"} ; Start-Sleep -Seconds 60 ; Get-Process msiexec  | Stop-Process -Force;
 Start-Job -ScriptBlock { \\172.168.2.130\d\QiDian5.0.0.18520\QiDian5.0.0.18520.exe /s}
 
-
+#在客户端查看生效的组策略
+1. 普通用户和管理员用户：gpresult
+2. 管理员用户： rsop
 
 
 
