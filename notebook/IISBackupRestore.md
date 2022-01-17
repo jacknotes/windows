@@ -66,3 +66,13 @@ type c:\sites.xml | %windir%\system32\inetsrv\appcmd add site /in
 6.上面报hresult: 80090005格式不正确根本原因是你导入了key(密钥备份还原)，这步省略就不会报这个上错了。
 
 7. net framwork4.0 --> 4.5 --> 4.6.1  最后在安装程序面板中只看到4.6.1，表示这个是升级安装，没有共存。
+
+
+站点配置问题汇总：
+注：安装好net framework后，需要在IIS管理器中服务器级别选择"ISAPI和CGI限制"并对其配置，允许ASP.NET V4.0功能
+rpt.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限
+oa.hs.com		需要开启ASP.NET 模拟、windows两个身份验证才行
+images.homsom.com	需要使用普通用户访问UNC路径，否则无权限访问而造成站点无法正常对外服务
+erp.hs.com	等老网站，需要在应用程序池的高级设置中"启用32位应用程序"功能才可使服务正常对外服务
+tms.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限，并且需要安装.net framework3.5和4.6.1
+
