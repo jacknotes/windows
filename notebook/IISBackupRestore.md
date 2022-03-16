@@ -1,4 +1,4 @@
-﻿#.net web环境准备：
+#.net web环境准备：
 1. .net framework在iis安装之前安装，iis会在ISAPI筛选器中自动注册ASP .Net相应版本筛选器，
 如果在iis安装之后安装则不会在ISAPI筛选器中自动注册ASP，需要执行c:\Windows\Microsoft.NET\Framework64\v4.0.30319\>aspnet_regiis.exe -i
 进行注册，注册好后就可以在ISAPI筛选器中看到注册的相应版本Framework。(c:\Windows\Microsoft.NET\Framework64\v4.0.30319\>aspnet_regiis.exe -u是进行卸载)
@@ -73,6 +73,6 @@ type c:\sites.xml | %windir%\system32\inetsrv\appcmd add site /in
 rpt.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限
 oa.hs.com		需要开启ASP.NET 模拟、windows两个身份验证才行
 images.homsom.com	需要使用普通用户访问UNC路径，否则无权限访问而造成站点无法正常对外服务
-erp.hs.com	等老网站，需要在应用程序池的高级设置中"启用32位应用程序"功能才可使服务正常对外服务
+erp.hs.com,sso.hs.com,hotelwebapi.homsom.com	等老网站，需要在应用程序池的高级设置中"启用32位应用程序"功能才可使服务正常对外服务
 tms.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限，并且需要安装.net framework3.5和4.6.1
 
