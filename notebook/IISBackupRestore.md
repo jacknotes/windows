@@ -75,4 +75,5 @@ oa.hs.com		需要开启ASP.NET 模拟、windows两个身份验证才行
 images.homsom.com	需要使用普通用户访问UNC路径，否则无权限访问而造成站点无法正常对外服务
 erp.hs.com,sso.hs.com,hotelwebapi.homsom.com	等老网站，需要在应用程序池的高级设置中"启用32位应用程序"功能才可使服务正常对外服务
 tms.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限，并且需要安装.net framework3.5和4.6.1
-
+images.homsom.com 站点目录指向共享\\172.168.2.220\TripPhoto，需要使用hs\iisuser用户访问才行，不能使用应用程序池用户访问，否则会有问题（例如其它网站调用此网站的图片显示不全）
+注：一定要在新部署服务器打开站点看是否正常，并且对比旧站点的返回code是否一致，例如403.1和403.14不一样，需要部署成完全一样。
