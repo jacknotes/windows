@@ -66,9 +66,23 @@
 
 ```
 * 前端项目需要依赖npm，所以这里需要安装nodejs，nodejs中有npm
-* 安装cnpm，切记，安装cnpm时需要跟npm的版本对应，我这里安装的nodejs版本是8.19.2，对应的版本是7.x.x。详情见https://github.com/cnpm/cnpm/tree/7.x
-npm install -g cnpm --registry=https://registry.npmmirror.com
-* 配置windows环境变量，这里需要注意，配置好环境变量后需要重启jenkins服务，否则会出现明明在windows中可以使用npm命令，但是在jenkins pipeline脚本中无法识别npm命令，只需要重启下jenkins服务让其重新识别下环境变量即可。	#这里是个大坑，坑了我好久
+* 安装cnpm，切记，安装cnpm时需要跟npm的版本对应，我这里安装的npm版本是8.19.2，对应的版本是7.x.x。详情见https://github.com/cnpm/cnpm/tree/7.x
+npm install -g cnpm@7.0.0 --registry=https://registry.npmmirror.com			
+npm install -g gulp --registry=https://registry.npmmirror.com
+npm install -g webpack --registry=https://registry.npmmirror.com
+npm install -g webpack-cli --registry=https://registry.npmmirror.com
+
+错误：Error: Cannot find module 'fs/promises'  
+原因：npm和cnpm版本不对应所致。需要先卸载再安装对应版本
+npm uninstall -g cnpm 
+
+#获取镜像地址
+npm get registry
+#永久配置registry地址，实现在用户家目录下生成.npmrc文件，内容为镜像地址
+npm config set registry http://nugetv3.hs.com/repository/npm-proxy/
+
+
+* 配置windows环境变量，为nodejs安装的目录，例如D:\Program Files\nodejs\，另外自动会配置用户下的变量()，此变量不要配置。这里需要注意，配置好环境变量后需要重启jenkins服务，否则会出现明明在windows中可以使用npm命令，但是在jenkins pipeline脚本中无法识别npm命令，只需要重启下jenkins服务让其重新识别下环境变量即可。	#这里是个大坑，坑了我好久
 
 ```
 
