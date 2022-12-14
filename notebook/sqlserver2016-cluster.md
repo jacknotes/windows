@@ -172,6 +172,8 @@
   GO
   ```
 
+  ![](../images/alwayson-backup.png)
+  
   ![](../images/alwayson04.png)
 
 
@@ -194,6 +196,12 @@
 
 ![](../images/alwayson08.png)
 
-* 添加一个侦听器，侦听器名称为："test-sqlconn"、端口、IP地址，网络IP地址为局域网内空闲IP{此IP以后提供读写功能的数据库实例地址}
+* 添加一个侦听器，侦听器名称为："test-sqlconn"、端口：1433、IP地址：172.168.2.66，网络IP地址为局域网内空闲IP {以后可以连接此IP来读写数据库}
 
 ![](../images/alwayson09.png)
+
+* 选择数据同步，首选项为"自动种子设定"，要求所有同一可用性组中的每个SQL Server实例上的数据和日志文件路径都是相同的，我是默认安装的，所以数据路径为：C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\，日志路径为：C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\
+
+![](../images/alwayson10.png)
+
+![](../images/alwayson11.png)
