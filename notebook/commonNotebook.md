@@ -589,7 +589,7 @@ foreach($i in $client){Get-WmiObject -query "select * from win32_product where n
 
 防火墙：
 netsh advfirewall show domainprofile
-
+netsh advfirewall set allprofiles state off
 
 
 -- 移动当前目录下的所有文件，移除后并删除当前目录：
