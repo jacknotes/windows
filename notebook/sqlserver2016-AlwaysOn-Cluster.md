@@ -259,3 +259,72 @@ insert into dbo.users values ('1','jack',28);
 
 
 
+## 还原操作
+
+
+
+### 小数据库文件备份还原操作
+
+* 可以直接在主要数据库上直接还原即可
+* 其它辅助数据库会同步主要数据库的数据文件
+
+
+
+
+
+### 大数据库文件备份还原操作
+
+```sql
+-- 主要数据库
+use master
+go
+
+create database HotelDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'C:\software\HotelDB_20221127020001_full.bak'
+
+RESTORE DATABASE HotelDB
+FROM
+DISK='C:\software\HotelDB_20221127020001_full.bak'
+WITH MOVE 'Homsom.Hotel.Elong' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\HotelDB.mdf',
+MOVE 'Homsom.Hotel.Elong_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\HotelDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+-- 辅助数据库1
+use master
+go
+
+create database HotelDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'C:\software\HotelDB_20221127020001_full.bak'
+
+RESTORE DATABASE HotelDB
+FROM
+DISK='C:\software\HotelDB_20221127020001_full.bak'
+WITH MOVE 'Homsom.Hotel.Elong' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\HotelDB.mdf',
+MOVE 'Homsom.Hotel.Elong_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\HotelDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+
+-- 辅助数据库2
+use master
+go
+
+create database HotelDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'C:\software\HotelDB_20221127020001_full.bak'
+
+RESTORE DATABASE HotelDB
+FROM
+DISK='C:\software\HotelDB_20221127020001_full.bak'
+WITH MOVE 'Homsom.Hotel.Elong' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\HotelDB.mdf',
+MOVE 'Homsom.Hotel.Elong_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\HotelDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+```
+
+* 然后在主要数据库上添加数据库 --> 全部连接 --> 选择恢复的数据库 --> "选择您的数据库同步选项" --> "仅联接" --> "直至完成即可"
