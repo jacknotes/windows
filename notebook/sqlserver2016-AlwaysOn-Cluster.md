@@ -177,7 +177,7 @@
 
 ![](../images/alwayson14.png)
 
-##### 注：
+##### 注意事项
 
 * 首选项为"自动种子设定"，要求所有同一可用性组中的每个SQL Server实例上的数据和日志文件路径都是相同的，我的数据目录为：C:\SQL-DATA，所以数据路径为：C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\，日志路径为：C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\
 * 只读路由URL: TCP://test-sql01.hs.com:1433
@@ -328,3 +328,806 @@ GO
 ```
 
 * 然后在主要数据库上添加数据库 --> 全部连接 --> 选择恢复的数据库 --> "选择您的数据库同步选项" --> "仅联接" --> "直至完成即可"
+
+
+
+
+
+
+
+## 还原操作数据库，仅联接方式
+
+```SQL
+-- 主要数据库
+---- 1 CommissionDB done 
+use master
+go
+
+create database CommissionDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\CommissionDB_20230101020000_full.bak'
+
+RESTORE DATABASE CommissionDB
+FROM
+DISK='D:\db-backup\CommissionDB_20230101020000_full.bak'
+WITH MOVE 'CommissionDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommissionDB.mdf',
+MOVE 'CommissionDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommissionDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 2 CommonFormDB done
+use master
+go
+
+create database CommonFormDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\CommonFormDB_20230101020000_full.bak'
+
+RESTORE DATABASE CommonFormDB
+FROM
+DISK='D:\db-backup\CommonFormDB_20230101020000_full.bak'
+WITH MOVE 'CommonFormDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommonFormDB.mdf',
+MOVE 'CommonFormDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommonFormDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 3 ehomsom done
+use master
+go
+
+create database ehomsom
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\ehomsom_20230101020000_full.bak'
+
+RESTORE DATABASE ehomsom
+FROM
+DISK='D:\db-backup\ehomsom_20230101020000_full.bak'
+WITH MOVE 'ehomsom_Data' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom.mdf',
+MOVE 'ehomsom_Log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 4 FinanceDB done
+use master
+go
+
+create database FinanceDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\FinanceDB_20230101020000_full.bak'
+
+RESTORE DATABASE FinanceDB
+FROM
+DISK='D:\db-backup\FinanceDB_20230101020000_full.bak'
+WITH MOVE 'FinanceDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FinanceDB.mdf',
+MOVE 'FinanceDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FinanceDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 5 FlightTicketDB done
+use master
+go
+
+create database FlightTicketDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\FlightTicketDB_20230101020000_full.bak'
+
+RESTORE DATABASE FlightTicketDB
+FROM
+DISK='D:\db-backup\FlightTicketDB_20230101020000_full.bak'
+WITH MOVE 'FlightTicketDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FlightTicketDB.mdf',
+MOVE 'FlightTicketDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FlightTicketDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 6 homsomDB done
+use master
+go
+
+create database homsomDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\homsomDB_20230101020000_full.bak'
+
+RESTORE DATABASE homsomDB
+FROM
+DISK='D:\db-backup\homsomDB_20230101020000_full.bak'
+WITH MOVE 'homsom_db' TO 'D:\SQL-DATA2\homsomDB.mdf',
+MOVE 'homsom_db_log' TO 'D:\SQL-DATA2\homsomDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 7 HotelOrderDB done
+use master
+go
+
+create database HotelOrderDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\HotelOrderDB_20230101020000_full.bak'
+
+RESTORE DATABASE HotelOrderDB
+FROM
+DISK='D:\db-backup\HotelOrderDB_20230101020000_full.bak'
+WITH MOVE 'HotelOrderDB' TO 'D:\SQL-DATA2\HotelOrderDB.mdf',
+MOVE 'HotelOrderDB_log' TO 'D:\SQL-DATA2\HotelOrderDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 8 hsTasks done
+use master
+go
+
+create database hsTasks
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\hsTasks_20230101020000_full.bak'
+
+RESTORE DATABASE hsTasks
+FROM
+DISK='D:\db-backup\hsTasks_20230101020000_full.bak'
+WITH MOVE 'hsTasks' TO 'D:\SQL-DATA2\hsTasks.mdf',
+MOVE 'hsTasks_log' TO 'D:\SQL-DATA2\hsTasks_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 9 IntegralDB done
+use master
+go
+
+create database IntegralDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\IntegralDB-202301091507-full.bak'
+
+RESTORE DATABASE IntegralDB
+FROM
+DISK='D:\db-backup\IntegralDB-202301091507-full.bak'
+WITH MOVE 'IntegralDB' TO 'D:\SQL-DATA2\IntegralDB.mdf',
+MOVE 'IntegralDB_log' TO 'D:\SQL-DATA2\IntegralDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 10 ITConfigDB done
+use master
+go
+
+create database ITConfigDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\ITConfigDB_20230101020000_full.bak'
+
+RESTORE DATABASE ITConfigDB
+FROM
+DISK='D:\db-backup\ITConfigDB_20230101020000_full.bak'
+WITH MOVE 'ITConfigDB' TO 'D:\SQL-DATA2\ITConfigDB.mdf',
+MOVE 'ITConfigDB_log' TO 'D:\SQL-DATA2\ITConfigDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 11 OpenApiDB done
+use master
+go
+
+create database OpenApiDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\OpenApiDB_20230101020000_full.bak'
+
+RESTORE DATABASE OpenApiDB
+FROM
+DISK='D:\db-backup\OpenApiDB_20230101020000_full.bak'
+WITH MOVE 'OpenApiDB' TO 'D:\SQL-DATA2\OpenApiDB.mdf',
+MOVE 'OpenApiDB_log' TO 'D:\SQL-DATA2\OpenApiDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+
+---- 12 RankDB done
+use master
+go
+
+create database RankDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\RankDB_20230101020000_full.bak'
+
+RESTORE DATABASE RankDB
+FROM
+DISK='D:\db-backup\RankDB_20230101020000_full.bak'
+WITH MOVE 'RankDB' TO 'D:\SQL-DATA2\RankDB.mdf',
+MOVE 'RankDB_log' TO 'D:\SQL-DATA2\RankDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 13 TargetCustomerDB done
+use master
+go
+
+create database TargetCustomerDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\TargetCustomerDB_20230101020000_full.bak'
+
+RESTORE DATABASE TargetCustomerDB
+FROM
+DISK='D:\db-backup\TargetCustomerDB_20230101020000_full.bak'
+WITH MOVE 'TargetCustomerDB' TO 'D:\SQL-DATA2\TargetCustomerDB.mdf',
+MOVE 'TargetCustomerDB_log' TO 'D:\SQL-DATA2\TargetCustomerDB_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 14 workflow done
+use master
+go
+
+create database workflow
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\workflow_20230101020000_full.bak'
+
+RESTORE DATABASE workflow
+FROM
+DISK='D:\db-backup\workflow_20230101020000_full.bak'
+WITH MOVE 'workflow' TO 'D:\SQL-DATA2\workflow.mdf',
+MOVE 'workflow_log' TO 'D:\SQL-DATA2\workflow_log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+---- 15 Topway 
+use master
+go
+
+create database Topway
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\Topway_20230101020000_full.bak'
+
+RESTORE DATABASE Topway
+FROM
+DISK='D:\db-backup\Topway_20230101020000_full.bak'
+WITH MOVE 'topway_Data' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway.mdf',
+MOVE 'ftrow_custphone' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway.ndf',
+MOVE 'topway_Log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway_Log.ldf',
+STATS = 10, REPLACE,RECOVERY
+GO
+
+
+
+
+
+
+-- 辅助数据库1
+---- CommissionDB done
+use master
+go
+
+create database CommissionDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\CommissionDB_20230101020000_full.bak'
+
+RESTORE DATABASE CommissionDB
+FROM
+DISK='D:\db-backup\CommissionDB_20230101020000_full.bak'
+WITH MOVE 'CommissionDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommissionDB.mdf',
+MOVE 'CommissionDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommissionDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 2 CommonFormDB  done
+use master
+go
+
+create database CommonFormDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\CommonFormDB_20230101020000_full.bak'
+
+RESTORE DATABASE CommonFormDB
+FROM
+DISK='D:\db-backup\CommonFormDB_20230101020000_full.bak'
+WITH MOVE 'CommonFormDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommonFormDB.mdf',
+MOVE 'CommonFormDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommonFormDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 3 ehomsom  done
+use master
+go
+
+create database ehomsom
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\ehomsom_20230101020000_full.bak'
+
+RESTORE DATABASE ehomsom
+FROM
+DISK='D:\db-backup\ehomsom_20230101020000_full.bak'
+WITH MOVE 'ehomsom_Data' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom.mdf',
+MOVE 'ehomsom_Log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 4 FinanceDB done
+use master
+go
+
+create database FinanceDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\FinanceDB_20230101020000_full.bak'
+
+RESTORE DATABASE FinanceDB
+FROM
+DISK='D:\db-backup\FinanceDB_20230101020000_full.bak'
+WITH MOVE 'FinanceDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FinanceDB.mdf',
+MOVE 'FinanceDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FinanceDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 5 FlightTicketDB  done
+use master
+go
+
+create database FlightTicketDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\FlightTicketDB_20230101020000_full.bak'
+
+RESTORE DATABASE FlightTicketDB
+FROM
+DISK='D:\db-backup\FlightTicketDB_20230101020000_full.bak'
+WITH MOVE 'FlightTicketDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FlightTicketDB.mdf',
+MOVE 'FlightTicketDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FlightTicketDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 6 homsomDB  done
+use master
+go
+
+create database homsomDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\homsomDB_20230101020000_full.bak'
+
+RESTORE DATABASE homsomDB
+FROM
+DISK='D:\db-backup\homsomDB_20230101020000_full.bak'
+WITH MOVE 'homsom_db' TO 'D:\SQL-DATA2\homsomDB.mdf',
+MOVE 'homsom_db_log' TO 'D:\SQL-DATA2\homsomDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 7 HotelOrderDB  done
+use master
+go
+
+create database HotelOrderDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\HotelOrderDB_20230101020000_full.bak'
+
+RESTORE DATABASE HotelOrderDB
+FROM
+DISK='D:\db-backup\HotelOrderDB_20230101020000_full.bak'
+WITH MOVE 'HotelOrderDB' TO 'D:\SQL-DATA2\HotelOrderDB.mdf',
+MOVE 'HotelOrderDB_log' TO 'D:\SQL-DATA2\HotelOrderDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 8 hsTasks done
+use master
+go
+
+create database hsTasks
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\hsTasks_20230101020000_full.bak'
+
+RESTORE DATABASE hsTasks
+FROM
+DISK='D:\db-backup\hsTasks_20230101020000_full.bak'
+WITH MOVE 'hsTasks' TO 'D:\SQL-DATA2\hsTasks.mdf',
+MOVE 'hsTasks_log' TO 'D:\SQL-DATA2\hsTasks_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 9 IntegralDB done
+use master
+go
+
+create database IntegralDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\IntegralDB-202301091507-full.bak'
+
+RESTORE DATABASE IntegralDB
+FROM
+DISK='D:\db-backup\IntegralDB-202301091507-full.bak'
+WITH MOVE 'IntegralDB' TO 'D:\SQL-DATA2\IntegralDB.mdf',
+MOVE 'IntegralDB_log' TO 'D:\SQL-DATA2\IntegralDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 10 ITConfigDB done
+use master
+go
+
+create database ITConfigDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\ITConfigDB_20230101020000_full.bak'
+
+RESTORE DATABASE ITConfigDB
+FROM
+DISK='D:\db-backup\ITConfigDB_20230101020000_full.bak'
+WITH MOVE 'ITConfigDB' TO 'D:\SQL-DATA2\ITConfigDB.mdf',
+MOVE 'ITConfigDB_log' TO 'D:\SQL-DATA2\ITConfigDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 11 OpenApiDB done
+use master
+go
+
+create database OpenApiDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\OpenApiDB_20230101020000_full.bak'
+
+RESTORE DATABASE OpenApiDB
+FROM
+DISK='D:\db-backup\OpenApiDB_20230101020000_full.bak'
+WITH MOVE 'OpenApiDB' TO 'D:\SQL-DATA2\OpenApiDB.mdf',
+MOVE 'OpenApiDB_log' TO 'D:\SQL-DATA2\OpenApiDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+
+---- 12 RankDB done
+use master
+go
+
+create database RankDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\RankDB_20230101020000_full.bak'
+
+RESTORE DATABASE RankDB
+FROM
+DISK='D:\db-backup\RankDB_20230101020000_full.bak'
+WITH MOVE 'RankDB' TO 'D:\SQL-DATA2\RankDB.mdf',
+MOVE 'RankDB_log' TO 'D:\SQL-DATA2\RankDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 13 TargetCustomerDB done
+use master
+go
+
+create database TargetCustomerDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\TargetCustomerDB_20230101020000_full.bak'
+
+RESTORE DATABASE TargetCustomerDB
+FROM
+DISK='D:\db-backup\TargetCustomerDB_20230101020000_full.bak'
+WITH MOVE 'TargetCustomerDB' TO 'D:\SQL-DATA2\TargetCustomerDB.mdf',
+MOVE 'TargetCustomerDB_log' TO 'D:\SQL-DATA2\TargetCustomerDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 14 workflow done
+use master
+go
+
+create database workflow
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\workflow_20230101020000_full.bak'
+
+RESTORE DATABASE workflow
+FROM
+DISK='D:\db-backup\workflow_20230101020000_full.bak'
+WITH MOVE 'workflow' TO 'D:\SQL-DATA2\workflow.mdf',
+MOVE 'workflow_log' TO 'D:\SQL-DATA2\workflow_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 15 Topway 
+use master
+go
+
+create database Topway
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\Topway_20230101020000_full.bak'
+
+RESTORE DATABASE Topway
+FROM
+DISK='D:\db-backup\Topway_20230101020000_full.bak'
+WITH MOVE 'topway_Data' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway.mdf',
+MOVE 'ftrow_custphone' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway.ndf',
+MOVE 'topway_Log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway_Log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 辅助数据库2
+---- CommissionDB done
+use master
+go
+
+create database CommissionDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\CommissionDB_20230101020000_full.bak'
+
+RESTORE DATABASE CommissionDB
+FROM
+DISK='D:\db-backup\CommissionDB_20230101020000_full.bak'
+WITH MOVE 'CommissionDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommissionDB.mdf',
+MOVE 'CommissionDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommissionDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 2 CommonFormDB  done
+use master
+go
+
+create database CommonFormDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\CommonFormDB_20230101020000_full.bak'
+
+RESTORE DATABASE CommonFormDB
+FROM
+DISK='D:\db-backup\CommonFormDB_20230101020000_full.bak'
+WITH MOVE 'CommonFormDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommonFormDB.mdf',
+MOVE 'CommonFormDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\CommonFormDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 3 ehomsom  done
+use master
+go
+
+create database ehomsom
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\ehomsom_20230101020000_full.bak'
+
+RESTORE DATABASE ehomsom
+FROM
+DISK='D:\db-backup\ehomsom_20230101020000_full.bak'
+WITH MOVE 'ehomsom_Data' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom.mdf',
+MOVE 'ehomsom_Log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 4 FinanceDB done
+use master
+go
+
+create database FinanceDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\FinanceDB_20230101020000_full.bak'
+
+RESTORE DATABASE FinanceDB
+FROM
+DISK='D:\db-backup\FinanceDB_20230101020000_full.bak'
+WITH MOVE 'FinanceDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FinanceDB.mdf',
+MOVE 'FinanceDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FinanceDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 5 FlightTicketDB  done
+use master
+go
+
+create database FlightTicketDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\FlightTicketDB_20230101020000_full.bak'
+
+RESTORE DATABASE FlightTicketDB
+FROM
+DISK='D:\db-backup\FlightTicketDB_20230101020000_full.bak'
+WITH MOVE 'FlightTicketDB' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FlightTicketDB.mdf',
+MOVE 'FlightTicketDB_log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\FlightTicketDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 6 homsomDB  done
+use master
+go
+
+create database homsomDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\homsomDB_20230101020000_full.bak'
+
+RESTORE DATABASE homsomDB
+FROM
+DISK='D:\db-backup\homsomDB_20230101020000_full.bak'
+WITH MOVE 'homsom_db' TO 'D:\SQL-DATA2\homsomDB.mdf',
+MOVE 'homsom_db_log' TO 'D:\SQL-DATA2\homsomDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 7 HotelOrderDB  done
+use master
+go
+
+create database HotelOrderDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\HotelOrderDB_20230101020000_full.bak'
+
+RESTORE DATABASE HotelOrderDB
+FROM
+DISK='D:\db-backup\HotelOrderDB_20230101020000_full.bak'
+WITH MOVE 'HotelOrderDB' TO 'D:\SQL-DATA2\HotelOrderDB.mdf',
+MOVE 'HotelOrderDB_log' TO 'D:\SQL-DATA2\HotelOrderDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 8 hsTasks done  ---- require full recovery mode
+use master
+go
+
+create database hsTasks
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\hsTasks_20230101020000_full.bak'
+
+RESTORE DATABASE hsTasks
+FROM
+DISK='D:\db-backup\hsTasks_20230101020000_full.bak'
+WITH MOVE 'hsTasks' TO 'D:\SQL-DATA2\hsTasks.mdf',
+MOVE 'hsTasks_log' TO 'D:\SQL-DATA2\hsTasks_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 9 IntegralDB done
+use master
+go
+
+create database IntegralDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\IntegralDB-202301091507-full.bak'
+
+RESTORE DATABASE IntegralDB
+FROM
+DISK='D:\db-backup\IntegralDB-202301091507-full.bak'
+WITH MOVE 'IntegralDB' TO 'D:\SQL-DATA2\IntegralDB.mdf',
+MOVE 'IntegralDB_log' TO 'D:\SQL-DATA2\IntegralDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 10 ITConfigDB done
+use master
+go
+
+create database ITConfigDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\ITConfigDB_20230101020000_full.bak'
+
+RESTORE DATABASE ITConfigDB
+FROM
+DISK='D:\db-backup\ITConfigDB_20230101020000_full.bak'
+WITH MOVE 'ITConfigDB' TO 'D:\SQL-DATA2\ITConfigDB.mdf',
+MOVE 'ITConfigDB_log' TO 'D:\SQL-DATA2\ITConfigDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 11 OpenApiDB done
+use master
+go
+
+create database OpenApiDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\OpenApiDB_20230101020000_full.bak'
+
+RESTORE DATABASE OpenApiDB
+FROM
+DISK='D:\db-backup\OpenApiDB_20230101020000_full.bak'
+WITH MOVE 'OpenApiDB' TO 'D:\SQL-DATA2\OpenApiDB.mdf',
+MOVE 'OpenApiDB_log' TO 'D:\SQL-DATA2\OpenApiDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+
+---- 12 RankDB done
+use master
+go
+
+create database RankDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\RankDB_20230101020000_full.bak'
+
+RESTORE DATABASE RankDB
+FROM
+DISK='D:\db-backup\RankDB_20230101020000_full.bak'
+WITH MOVE 'RankDB' TO 'D:\SQL-DATA2\RankDB.mdf',
+MOVE 'RankDB_log' TO 'D:\SQL-DATA2\RankDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 13 TargetCustomerDB done
+use master
+go
+
+create database TargetCustomerDB
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\TargetCustomerDB_20230101020000_full.bak'
+
+RESTORE DATABASE TargetCustomerDB
+FROM
+DISK='D:\db-backup\TargetCustomerDB_20230101020000_full.bak'
+WITH MOVE 'TargetCustomerDB' TO 'D:\SQL-DATA2\TargetCustomerDB.mdf',
+MOVE 'TargetCustomerDB_log' TO 'D:\SQL-DATA2\TargetCustomerDB_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 14 workflow done
+use master
+go
+
+create database workflow
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\workflow_20230101020000_full.bak'
+
+RESTORE DATABASE workflow
+FROM
+DISK='D:\db-backup\workflow_20230101020000_full.bak'
+WITH MOVE 'workflow' TO 'D:\SQL-DATA2\workflow.mdf',
+MOVE 'workflow_log' TO 'D:\SQL-DATA2\workflow_log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+---- 15 Topway 
+use master
+go
+
+create database Topway
+go
+-- RESTORE FILELISTONLY FROM DISK = N'D:\db-backup\Topway_20230101020000_full.bak'
+
+RESTORE DATABASE Topway
+FROM
+DISK='D:\db-backup\Topway_20230101020000_full.bak'
+WITH MOVE 'topway_Data' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway.mdf',
+MOVE 'ftrow_custphone' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway.ndf',
+MOVE 'topway_Log' TO 'C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\Topway_Log.ldf',
+STATS = 10, REPLACE,NORECOVERY
+GO
+
+
+```
+
+
+
