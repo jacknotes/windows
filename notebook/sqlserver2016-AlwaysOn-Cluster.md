@@ -1,3 +1,5 @@
+
+
 # SQLServer 2016 Always-On Cluster Deploy
 
 
@@ -1130,4 +1132,32 @@ GO
 ```
 
 
+
+### 收缩日志大小、分离附加
+
+
+```
+-- use ehomsom;
+-- 查看当前数据库文件列表
+-- select * from sysfiles
+
+-- 截断事务日志：BACKUP LOG ehomsom to disk='ehomsom-202301111152.trn' WITH NAME=N'ehomsom 日志'
+-- 收缩数据库：DBCC SHRINKDATABASE(ehomsom)
+-- 收缩指定数据文件,1是文件号: DBCC SHRINKFILE(1)
+
+
+-- 分离数据库
+-- EXEC sp_detach_db @dbname = 'ehomsom'
+-- 附加数据库
+-- EXEC sp_attach_single_file_db @dbname = ‘ehomsom’,@physname = ‘C:\SQL-DATA\MSSQL13.MSSQLSERVER\MSSQL\DATA\ehomsom.mdf’
+
+
+-- 为了以后能自动收缩,做如下设置
+-- 企业管理器–服务器–右键数据库–属性–选项–选择”自动收缩”
+-- SQL语句设置方式:
+-- EXEC sp_dboption ‘数据库名’, ‘autoshrink’, ‘TRUE’
+-- 或
+-- ALTER DATABASE <你的数据库名称> SET AUTO_SHRINK ON
+-- 如: ALTER DATABASE myXXDB SET AUTO_SHRINK ON
+```
 
