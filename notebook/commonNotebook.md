@@ -27,12 +27,22 @@ DFS01、DFS02:
 6. 在命名空间名称上右键开启“客户端故障回复到首先目标”，此功能用于在命名空间服务器回归到正常状态时，客户端会连接首先服务器（此服务器在建立复制组时会提示选择）
 7. 也可按需对复制组进行计划复制，默认复制是全天候复制。
 
-<<<<<<< HEAD
+
 #wsus client sync command 
 wuauclt /resetauthorization /detectnow
 wuauclt /detectnow
 wuauclt /reportnow
-=======
+
+windows server2012无法向WSUS报告状态：
+1. 手动下载并安装更新https://www.catalog.update.microsoft.com/Search.aspx?q=KB4054519
+2. 在你的WSUS上，打开IIS Application Pool，进行以下修改，然后重启IIS服务
+Queue Length: 25000 from 10000
+Limit Interval (minutes): 15 from 5
+
+
+
+
+
 #Dell服务器IDRAC默认帐户信息
 <pre>
 Dell服务器默认用户信息如下：

@@ -78,3 +78,81 @@ tms.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写�
 images.homsom.com 站点目录指向共享\\172.168.2.220\TripPhoto，需要使用hs\iisuser用户访问才行，不能使用应用程序池用户访问，否则会有问题（例如其它网站调用此网站的图片显示不全）
 注：一定要在新部署服务器打开站点看是否正常，并且对比旧站点的返回code是否一致，例如403.1和403.14不一样，需要部署成完全一样。
 注：前端项目需要安装URL重写模块，否则服务无法正常访问。
+
+
+
+# 192.168.13.229 IIS迁移
+1. 安装OS，系统版本Windows Server 2012R2 Datacenter
+2. 安装IIS，下一步到"Web服务器角色"--全选角色服务--确认安装
+3. 备份192.168.13.229 site、apppool、hosts文件
+```
+$HOSTNAME="192.168.13.228"
+$DATEYEAR=(get-date).Year
+$DATEMONTH=(get-date).Month
+$DATEDAY=(get-date).Day
+$DATE="$DATEYEAR"+"$DATEMONTH"+"$DATEDAY"
+$APPPOOL_CMD="apppool"
+$SITE_CMD="site"
+$HOSTS="hosts"
+$BACKUP_DIR="\\192.168.13.72\share_backup"
+$NETFRAMWORK_DIR="C:\Windows\Microsoft.NET\Framework64\v4.0.30319"
+$IIS_Config_Key="iisConfigurationKey"
+$IIS_Was_Key="iisWasKey"
+
+C:\windows\system32\inetsrv\appcmd list $APPPOOL_CMD /config /xml >  $BACKUP_DIR\$HOSTNAME-$APPPOOL_CMD-$DATE.xml
+C:\windows\system32\inetsrv\appcmd list $SITE_CMD /config /xml >  $BACKUP_DIR\$HOSTNAME-$SITE_CMD-$DATE.xml
+copy C:\Windows\system32\drivers\etc\hosts $BACKUP_DIR\$HOSTNAME-$HOSTS-$DATE.host
+```
+4. 将"\\192.168.13.72\share_backup"共享下备份的文件复制到新机器"C:\Software"下
+5. 在新机器上还原备份的site、apppool、hosts文件
+```
+$HOST_CUSTOM="192.168.13.228"
+$DATE_CUSTOM="2023217"
+$BACKUP_DIR="C:\Software"
+$ApppoolFiles="$BACKUP_DIR\${HOST_CUSTOM}-apppool-${DATE_CUSTOM}.xml"
+$SiteFiles="$BACKUP_DIR\${HOST_CUSTOM}-site-${DATE_CUSTOM}.xml"
+$SourceHostsFils="$BACKUP_DIR\${HOST_CUSTOM}-hosts-${DATE_CUSTOM}"
+$DestinationHostsFils="C:\Windows\System32\drivers\etc\hosts"
+
+##DELETE
+#step1:
+$CurrentSites=C:\Windows\system32\inetsrv\appcmd.exe list sites
+$Sites=foreach($i in $CurrentSites){($i -split '"')[1]}
+foreach($i in $Sites){C:\Windows\system32\inetsrv\appcmd.exe delete site $i}
+
+#step2:
+$CurrentApppools=C:\Windows\system32\inetsrv\appcmd.exe list apppools
+$Apppools=foreach($i in $CurrentApppools){($i -split '"')[1]}
+foreach($i in $Apppools){C:\Windows\system32\inetsrv\appcmd.exe delete apppool $i}
+
+##RESTORE
+#step3:
+type $ApppoolFiles | c:\windows\system32\inetsrv\appcmd.exe add apppool -
+type $SiteFiles | c:\windows\system32\inetsrv\appcmd.exe add site - 
+##copy hosts,move source directory
+Copy-Item -Path $SourceHostsFils -Destination $DestinationHostsFils -Recurse
+```
+
+6. 导入apppool文件报错：
+```
+ERROR ( hresult:8007000d, message:命令执行失败。
+数据无效。
+ )
+ ```
+ 解决办法：
+原因是192.168.13.229是windows server2019，IIS版本是v10，而新机器是windows server 2012R2，IIS版本是V8.5，所以版本v8.5并不兼容v10，但v10是向下兼容v8.5的。
+为了解决这个问题，我从192.168.13.228备份，因为228服务器版本是v8.5，跟新机器版本一致，不存在兼容问题。
+
+7. 安装IIS URL重写模块2
+8. 安装.net framework4.6.1
+9. 同步最新站点数据
+---
+
+
+
+
+
+
+
+
+
