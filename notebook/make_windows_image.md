@@ -56,10 +56,10 @@
 3. 通用化系统并将其引导到OOBE
 
    ```
-   Sysprep /generalize /oobe /shutdown
+   C:\Windows\System32\Sysprep\Sysprep /generalize /oobe /shutdown
    ```
 
-4. 启动 WinPE 并捕获参考系统的映像
+4. 启动 WinPE 并捕获参考系统的映像，VMware需要有管理员身份打开运行，否则在添加硬盘（以物理硬盘模式添加）时会识别不到U盘，添加时与虚拟机系统硬盘接口模式一致，并把新硬盘的顺序调整为第一个
 
    ```
    Dism /Capture-Image /ImageFile:"D:\Images\Homsom.wim" /CaptureDir:C:\ /Name:Homsom
@@ -67,7 +67,7 @@
 
 5. 应用映像
 
-   使用 WinPE 启动目标设备
+   使用 WinPE 启动目标设备 
 
    使用脚本擦除硬盘驱动器并设置新的分区
 
