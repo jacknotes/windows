@@ -99,10 +99,43 @@ def jobs = Jenkins.instance.projects.collect { it }
 jobs.each { job -> job.getBuilds().each { it.delete() }} 
 
 
+# 清除所有job不大于maxNumber的构建日志
+def maxNumber = 3
+def jobs = Jenkins.instance.projects.collect { it } 
+jobs.each { job -> job.getBuilds().findAll {
+  it.number <= maxNumber
+}.each { 
+	it.delete() }
+} 
+
+
 # 清除指定项目日志
 def jobName = "Your Job Name"
 def job = Jenkins.instance.getItem(jobName)
 job.getBuilds().each { it.delete() }
 
+
+# 清除指定项目日志，删除不大于 maxNumber 的记录
+def jobName = "nginx.hs.com"
+def maxNumber = 70
+Jenkins.instance.getItemByFullName(jobName);
+Jenkins.instance.getItemByFullName(jobName).builds.findAll {
+  it.number <= maxNumber
+}.each {
+  it.delete()
+}
+
+
+# 删除指定job构建历史区间记录
+import jenkins.model.*;
+import hudson.model.Fingerprint.RangeSet;
+
+def jobName = "nginx.hs.com";
+def buildRange = "74-76";
+def j = jenkins.model.Jenkins.instance.getItemByFullName(jobName);
+def r = RangeSet.fromString(buildRange, true);
+j.getBuilds(r).each { it.delete() }
+
 ```
+
 
