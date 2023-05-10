@@ -5,6 +5,11 @@
 2. 注册成功后，在"ISAPI和CGI限制"中允许已经注册的Framework版本。
 
 #警告：此密钥备份还原会导致还原时出现无法导入用户名和密码，建议不要使用密钥备份还原。
+#出现以下情况需要备份还原密钥：
+```
+应用程序池“erp.hs.com”的工作进程在尝试从文件“\\?\C:\inetpub\temp\apppools\erp.hs.com\erp.hs.com.config”的第“149”行读取配置数据时遇到错误“未能解密特性“password”
+”。数据字段包含错误代码。
+```
 密钥备份还原
 cd C:\Windows\Microsoft.NET\Framework64\v4.0.30319
 A机
@@ -15,6 +20,15 @@ B机
 cd C:\Windows\Microsoft.NET\Framework64\v4.0.30319
 aspnet_regiis -pi "iisConfigurationKey" "D:\iisConfigurationKey.xml" 
 aspnet_regiis -pi "iisWasKey" "D:\iisWasKey.xml"
+aspnet_regiis -pi "iisConfigurationKey" "c:\192.168.13.205-iisConfigurationKey-202358.xml"
+aspnet_regiis -pi "iisWasKey" "c:\192.168.13.205-iisWasKey-202358.xml"
+
+
+
+删除key
+aspnet_regiis -pz "iisConfigurationKey"
+aspnet_regiis -pz "iisWasKey"
+
 
 ★在IIS7+上导出所有应用程序池的方法:
 %windir%\system32\inetsrv\appcmd list apppool /config /xml > c:\apppools.xml
@@ -67,6 +81,15 @@ type c:\sites.xml | %windir%\system32\inetsrv\appcmd add site /in
 
 7. net framwork4.0 --> 4.5 --> 4.6.1  最后在安装程序面板中只看到4.6.1，表示这个是升级安装，没有共存。
 
+8. office安装：
+	1. 先装office2007到C盘
+	2. 后安装office2003到D盘
+	3. 此2个版本可共存
+
+9. WEBFILES配置共享权限：
+共享权限：everyone读写
+读写权限：IIS_IUSRS有读写权限
+
 
 站点配置问题汇总：
 注：安装好net framework后，需要在IIS管理器中服务器级别选择"ISAPI和CGI限制"并对其配置，允许ASP.NET V4.0功能
@@ -74,10 +97,11 @@ rpt.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写�
 oa.hs.com		需要开启ASP.NET 模拟、windows两个身份验证才行
 images.homsom.com	需要使用普通用户访问UNC路径，否则无权限访问而造成站点无法正常对外服务
 erp.hs.com,sso.hs.com,hotelwebapi.homsom.com	等老网站，需要在应用程序池的高级设置中"启用32位应用程序"功能才可使服务正常对外服务
-tms.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限，并且需要安装.net framework3.5和4.6.1
+tms.hs.com	站点目录需要本地用户组SRV-WEB01\IIS_IUSRS有访问读写权限，并且需要安装.net framework3.5和4.6.1，必须先安装.net framework3.5、然后再安装4.6.1，否则会影响4.6.1，解决办法是重新运行4.6.1将其修复至原始状态。
 images.homsom.com 站点目录指向共享\\172.168.2.220\TripPhoto，需要使用hs\iisuser用户访问才行，不能使用应用程序池用户访问，否则会有问题（例如其它网站调用此网站的图片显示不全）
 注：一定要在新部署服务器打开站点看是否正常，并且对比旧站点的返回code是否一致，例如403.1和403.14不一样，需要部署成完全一样。
 注：前端项目需要安装URL重写模块，否则服务无法正常访问。
+
 
 
 
