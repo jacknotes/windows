@@ -6,7 +6,6 @@ InsuranceInputService
 InsuranceOutService
 IntInsuranceInputService
 IntlInsuranceOutService
-AirTicketCancelService
 TMS自动轮询服务
 TaskManager.WinService
 Mub2gTktService

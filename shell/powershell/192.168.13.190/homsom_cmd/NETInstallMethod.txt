@@ -1,0 +1,10 @@
+
+cd C:\Windows\Microsoft.NET\Framework\v4.0.30319 
+InstallUtil.exe E:\insurance\ZDCP\Homsom.TMS.Service.InsuranceOutPolling.exe
+InstallUtil.exe E:\insurance\ZDLR\Homsom.TMS.Service.InsuranceInputPolling.exe
+
+InstallUtil.exe -u E:\insurance\ZDCP\Homsom.TMS.Service.InsuranceOutPolling.exe(卸载)
+
+
+InstallUtil.exe D:\恒顺国旅\国际保险自动出票\Homsom.TMS.Service.IntlInsuranceOutPolling.exe
+InstallUtil.exe D:\恒顺国旅\国际保险自动录入\Homsom.TMS.Serivce.IntInsuranceInputPolling.exe

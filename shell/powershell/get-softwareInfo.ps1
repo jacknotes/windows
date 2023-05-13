@@ -1,0 +1,1 @@
+Get-CimInstance -ClassName win32_product  | Where-Object name -eq "企业QQ" | select-object name,version

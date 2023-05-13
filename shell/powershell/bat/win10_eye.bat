@@ -1,0 +1,2 @@
+reg add "HKCU\Control Panel\Colors" /v Window /t REG_SZ /d "193 230 198" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\DefaultColors\Standard" /v Window /t REG_DWORD /d "12707526" /f

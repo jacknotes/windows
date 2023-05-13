@@ -1,0 +1,59 @@
+PS C:\Users\0799> cat E:\123.txt
+
+HS-UA-TSJ-0029
+
+HS-UA-TSJ-0061
+HS-UA-TSJ-0031
+HS-UA-TSJ-0032
+HS-UA-TSJ-0033
+
+--新建多个pssession
+PS C:\Users\0799> $session=cat E:\123.txt | where {$_.trim() -ne "" } | New-PSSession -ThrottleLimit 50 -ErrorAction Ignore
+Get-PSSession
+Invoke-Command -Session $Session {Get-Service -Name W32time}
+Get-PSSession | Remove-PSSession
+
+#获取安装包信息
+$session=130..132 | foreach { "HS-UA-TSJ-{0:D4}" -F $PSItem } | New-PSSession -ThrottleLimit 50 -ErrorAction Ignore
+Invoke-Command -Session $Session -ScriptBlock {Get-CimInstance -ClassName win32_product  | Where-Object name -eq "企业QQ" | select-object name,version,PSComputerName} | format-table
+
+
+--cim
+Get-CimInstance -ClassName win32_bios -Property Manufacturer,SerialNumber -computername HS-UA-TSJ-0029,HS-UA-TSJ-0061 | Select-Object -Property Manufacturer,SerialNumber
+
+--安装第三方模块
+Get-PSRepository
+Set-PSRepository -name PSGallery -InstallationPolicy Trusted
+Install-Module -Name QuserObject,RunAsUser
+Uninstall-Module -Name RunAsUser
+
+PS C:\Users\0799> Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_PhysicalMemoryArray | select-object MaxCapacity,MemoryDevices
+
+MaxCapacity MemoryDevices
+----------- -------------
+   16777216             2
+PS C:\Users\0799> Invoke-Command -Session $Ss -ScriptBlock {Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_PhysicalMemory  -ErrorAction Ignore | select-object -ErrorAction Ignore PSComputerName,DeviceLocator,SMBIOSMemoryType,ConfiguredClockSpeed,Speed,Capacity,Tag}
+##注：SMBIOSMemoryType24为DDR3,26为DDR4
+DeviceLocator        : DIMM2
+SMBIOSMemoryType     : 24
+ConfiguredClockSpeed : 1600
+Speed                : 1600
+Capacity             : 8589934592
+Tag                  : Physical Memory 1
+PSComputerName       : HS-UA-TSJ-0120
+RunspaceId           : a702d9d5-89a6-421c-8159-e832ca8c7839
+
+DeviceLocator        : DIMM1
+SMBIOSMemoryType     : 26
+ConfiguredClockSpeed : 2400
+Speed                : 2400
+Capacity             : 4294967296
+Tag                  : Physical Memory 0
+PSComputerName       : HS-UA-TSJ-0121
+RunspaceId           : b0245130-9e98-4765-a529-a52c3161fbde
+
+Invoke-Command -Session (Get-PSSession) -ScriptBlock { Get-Item "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\" | foreach { Write-Output -InputObject "$($_.GetValue('ProductName'))`t$($_.GetValue('DisplayVersion'))`t$($_.GetValue('InstallDate'))`t$($_.GetValue('InstallTime'))`t$($_.GetValue('CurrentBuild'))`t$($_.GetValue('UBR'))`t$(hostname)" } }
+
+
+
+Get-WmiObject -Query "select * from Win32_PerfRawData_PerfDisk_LogicalDisk" | ft Name, PercentFreeSpace, PercentFreeSpace_Base

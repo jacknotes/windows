@@ -1,0 +1,9 @@
+# windows process
+forfiles /p "F:\Monitor file\172.168.2.89" /s /m *.* /d +2022/12/23 /c "cmd /c copy /y @path E:\tmp5\"
+
+
+
+# linux process
+startTime='8'
+endTime='18'
+for i in `ls *.avi`;do a=`stat $i | grep 'Modify' | awk '{print $3}' | awk -F':' '{print $1}'`;if [ "$a" -ge "$startTime" -a "$a" -lt "$endTime" ];then cp -a $i video;else echo [error]: $i;fi;done

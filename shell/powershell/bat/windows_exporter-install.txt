@@ -1,0 +1,7 @@
+## from cmd usage
+
+# uninstall
+msiexec /x windows_exporter-0.13.0-amd64.msi 
+
+# install
+msiexec /i windows_exporter-0.13.0-amd64.msi ENABLED_COLLECTORS=cpu,cs,logical_disk,net,os,service,system,tcp,textfile,iis,memory

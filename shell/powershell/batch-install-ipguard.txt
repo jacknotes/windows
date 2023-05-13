@@ -1,0 +1,85 @@
+-- copy software to client
+
+Get-PSSession | Remove-PSSession
+
+
+$hostnametech=
+'HS-UA-TSJ-0077',
+'HS-UA-TSJ-0085',
+'HS-UA-TSJ-0121',
+'HS-UA-TSJ-0114',
+'HS-UA-TSJ-0130',
+'HS-UA-TSJ-0158',
+'HS-UA-TSJ-0125',
+'HS-UA-TSJ-0117',
+'HS-UA-TSJ-0118',
+'HS-UA-TSJ-0128',
+'HS-UA-TSJ-0152',
+'HS-UA-TSJ-0159',
+'HS-UA-TSJ-0091',
+'HS-UA-TSJ-0098',
+'HS-UA-TSJ-0127',
+'HS-UA-TSJ-0155',
+'HS-UA-TSJ-0148',
+'HS-UA-TSJ-0115',
+'HS-UA-TSJ-0119',
+'HS-UA-TSJ-0157'
+
+
+
+
+
+
+# foreach( $i in $hostnametech) { ping -w 60 -n 1 $i }
+
+
+$session=New-PSSession -ComputerName $hostnametech
+
+
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { net use \\172.168.2.219\share /user:hs\topuser topuser; Copy-Item -Recurse -Force \\172.168.2.219\share\IPGuard\opsin c:\; net use \\172.168.2.219\share /del; }
+}
+
+
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { dir c:\opsin }
+}
+
+
+
+
+-- job install 
+
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { Start-Job -ScriptBlock { c:\opsin\ipguard.exe }; }
+}
+
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { get-job; }
+}
+
+
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { Get-Process *ipguard*; }
+}
+
+
+
+
+-- delete install package
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { dir c:\opsin }
+}
+
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock {  Remove-Item -Force -Recurse C:\opsin ; }
+}
+
+
+
+
+
+Get-PSSession | Remove-PSSession
+
+
+

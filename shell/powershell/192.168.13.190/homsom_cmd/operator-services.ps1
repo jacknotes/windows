@@ -5,7 +5,7 @@ param(
 )
 
 
-$SERVICE_NAME="TicketInbagService","酒店无消费账单轮询","HotelNoSaled","HomsomERPPollingService","InsuranceInputService","InsuranceOutService","IntInsuranceInputService","IntlInsuranceOutService","AirTicketCancelService","TMS自动轮询服务","TaskManager.WinService","Mub2gTktService"
+$SERVICE_NAME="TicketInbagService","酒店无消费账单轮询","HotelNoSaled","HomsomERPPollingService","InsuranceInputService","InsuranceOutService","IntInsuranceInputService","IntlInsuranceOutService","TMS自动轮询服务","TaskManager.WinService","Mub2gTktService"
 
 function running(){
 	foreach($i in $SERVICE_NAME){

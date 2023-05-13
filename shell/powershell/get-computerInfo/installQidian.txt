@@ -1,0 +1,56 @@
+
+-- {E354F39D-4B67-4B4F-914F-FFAF55D6F5FF}
+
+
+-- computer install qidian program.
+
+$hostnametech=
+'HS-UA-TSJ-0016',
+'HS-UA-BJB-0006',
+'HS-UA-BJB-0019'
+
+
+
+
+
+$session=New-PSSession -ComputerName $hostnametech
+
+
+--get os info
+ForEach($ss in $session){
+	Invoke-Command -ThrottleLimit 50 -Session $ss -ErrorAction Ignore -ScriptBlock { 
+		Get-CimInstance -Namespace root/CIMV2 -ClassName win32_operatingsystem | Select-Object -Property Caption,OSArchitecture,RegisteredUser,TotalVisibleMemorySize
+	}
+}
+
+-- get uninstall-string
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { get-childitem -Path "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('InstallLocation') -match 'qidian' } | select-Object pspath }
+}
+
+--install qidian
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { net use * /delete /y; net use \\172.168.2.219\share share@4006 /user:hs\accessshare; Start-Job -ScriptBlock { \\172.168.2.219\share\QiDian5.0.0.18548.exe /s};net use * /delete /y; }
+}
+
+-- get job
+ForEach($ss in $session){
+	 Invoke-Command -ThrottleLimit 50  -session $ss -ErrorAction Ignore -ScriptBlock { get-job }
+}
+
+-- remove pssession
+Get-PSSession | Remove-PSSession
+
+
+--enter pssession install 
+net use * /delete /y; net use \\172.168.2.219\share share@4006 /user:hs\accessshare; Start-Job -ScriptBlock { \\172.168.2.219\share\QiDian5.0.0.18548.exe /s};net use * /delete /y;
+
+--enter pssession get info
+get-childitem -Path "HKLM:\software\wow6432node\microsoft\windows\currentversion\Uninstall\" | Where-Object -FilterScript {$_.GetValue('InstallLocation') -match 'qidian'}
+
+----enter pssession remove
+Start-Job -ScriptBlock {& "C:\Windows\System32\cmd.exe" /c "MsiExec.exe /X{E354F39D-4B67-4B4F-914F-FFAF55D6F5FF} /quiet /norestart"}
+Get-Process msiexec  | Stop-Process -Force
+
+
+
