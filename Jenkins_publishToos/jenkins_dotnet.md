@@ -57,6 +57,7 @@
 
 ```
 * 需要安装.net framwork 2.0 3.0 3.5 4.0 4.5.1 4.5.2 4.6.1 4.6.2，但是安装太多还是无法通过jenkins构建，最后安装visual studio 2017解决，因为VS2017中自己会安装以上组件
+链接地址：https://download.visualstudio.microsoft.com/download/pr/8850d5c5-b050-404b-aad7-32152cd2b206/4b16dbb164583cda7dc5bb522c9302885e428c69285b11444e988a1117bda3d7/vs_Enterprise.exe
 * 为了实现jenkins进行pipeline时需要使用msbuild工具进行编译成功。需要安装vs_BuildTools.exe，安装此工具时，需要勾选“Web开发生成工具”选项，否则就算在这里成功安装msbuild，但也无法在jenkins中编译成功。切记。
 ```
 
