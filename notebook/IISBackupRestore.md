@@ -174,6 +174,16 @@ ERROR ( hresult:8007000d, message:命令执行失败。
 
 
 
+## 部署2号环境
+
+1. 192.168.13.228、192.168.13.232可以克隆实现部署
+	* 退域并重启
+	* 用本地管理员登录并重新生成UUID
+		C:\Windows\System32\Sysprep\Sysprep /generalize /oobe /reboot
+	* 重启并重新加域
+2. 192.168.13.204只能手动重新部署iis
+
+
 
 
 
