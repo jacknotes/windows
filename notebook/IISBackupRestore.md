@@ -107,7 +107,7 @@ images.homsom.com 站点目录指向共享\\172.168.2.220\TripPhoto，需要使�
 
 # 192.168.13.229 IIS迁移
 1. 安装OS，系统版本Windows Server 2012R2 Datacenter
-2. 安装IIS，下一步到"Web服务器角色"--全选角色服务--确认安装
+2. 安装IIS，下一步到"Web服务器角色"、".net framwork3.5"----全选角色服务--确认安装
 3. 备份192.168.13.229 site、apppool、hosts文件
 ```
 $HOSTNAME="192.168.13.228"
@@ -185,7 +185,15 @@ ERROR ( hresult:8007000d, message:命令执行失败。
 
 
 
+## 问题
 
+
+`windows server 2012R2  framwork3.5安装失败`
+原因：因为先装更新，导致windows server 2012R2更新到新版本了，所以再把OS镜像包中的sxs复制到C盘，再安装时，此时sxs版本是老的，而现在系统是新的，所以一直安装不上
+解决：
+1. 重装系统，先安装.net framwork3.5，备用路径为: `c:\sxs\`
+2. 安装IIS及测试
+3. 最后安装更新
 
 
 
