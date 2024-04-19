@@ -491,7 +491,7 @@ DBCC SHRINKDATABASE(testDB)
 ALTER DATABASE [testDB] SET RECOVERY FULL;
 ```
 
-2. 全备主要数据库节点的数据库`testDB`，然后颁发数据库到其它辅助节点进行恢复，辅助数据库节点恢复数据库状态必需为`NORECOVERY`
+2. 全备主要数据库节点的数据库`testDB`，然后分发数据库到其它辅助节点进行恢复，辅助数据库节点恢复数据库状态必需为`NORECOVERY`
 3. 然后在相应`可用性组`中进行`添加数据库`进行数据库`联接`，实现可用性数据库功能。
 
 
