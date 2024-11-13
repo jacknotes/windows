@@ -903,3 +903,15 @@ PS C:\Users\0799> powercfg.exe /q 381b4222-f694-41f0-9685-ff5bb260df2e 238c9fa8-
 
 </pre>
 
+
+# WSUS服务
+**安装wsus服务**
+在服务器管理器中勾选wsus更新服务，并默认安装iis，并安装指定.netframwork版本，安装完后设置是做为主wsus，
+还是自治wsus或者副本wsus，要看更新报告，需要安装两个插件：1.ReportViewer.msi(可在wsus更新服务中点击
+查看更新报告时会弹出链接下载)，2.SQLSysClrTypes.msi(这个软件在安装ReportViewer.msi时提示依赖此软件，必须先安装，
+地址可google或百度出来下载)
+
+**更换存储位置**
+PS C:\Program Files\Update Services\Tools> .\WsusUtil.exe movecontent D:\WSUSData d:\wsusMove.log
+正在移动内容位置。请不要终止该程序。
+已成功完成内容移动。
