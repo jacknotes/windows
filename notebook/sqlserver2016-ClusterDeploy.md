@@ -46,7 +46,7 @@ net stop wuauserv
 reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate /f
 net start wuauserv
 ```
-4. 如果wsus更新安装不，则使用系统默认的更新服务器安装
+4. 如果wsus更新安装不了，则使用系统默认的更新服务器安装
 
 
 

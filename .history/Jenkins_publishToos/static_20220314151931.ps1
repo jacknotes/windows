@@ -35,7 +35,7 @@ echo "current publish type is $ENV:PublishType"
 switch($ENV:PublishType)
 {
     "publishToProduction" {
-        if ($ENV:publishPassword -eq "123456")
+        if ($ENV:publishPassword -eq "homsom+4006123123")
         { 
             cd Homsom.TMS.Client\Homsom.TMS.Client.CDN\Homsom.TMS.Client.CDN.WebSite
             npm run release
@@ -50,14 +50,14 @@ switch($ENV:PublishType)
         }
     }
     "backupProduction" {
-        if ($ENV:publishPassword -eq "123456")
+        if ($ENV:publishPassword -eq "homsom+4006123123")
         { 
             $targetPath = $ENV:ProdPath    
             & $cmdBackup $backupPath $targetPath
         }
     }
     "rollbackProduction" {
-        if ($ENV:publishPassword -eq "123456")
+        if ($ENV:publishPassword -eq "homsom+4006123123")
         {     
             $targetPath = $ENV:ProdPath    
             & $cmdRestore $backupPath $targetPath
