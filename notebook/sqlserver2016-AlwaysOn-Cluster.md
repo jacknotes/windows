@@ -241,7 +241,7 @@ insert into dbo.users values ('1','jack',28);
 ### 7.2 自动故障转移
 
 * 在WSFC"故障转移群集管理器"上，选择test-conn.hs.com集群下的角色，选中特定可用性组，右键属性，进行配置自动故障转移条件，切换到故障转换选项卡，默认条件是6小时内最大故障次数为2次，则立即自故障故障转移。
-* 为了测试，所以我将自动故障转移条件配置为默认条件是6小时内最大故障次数为100次，则立即自故障故障转移。
+* 为了测试，所以我将自动故障转移条件配置为默认条件是6小时内最大故障次数为100次，则立即自动故障转移。
 
 
 
@@ -257,14 +257,10 @@ insert into dbo.users values ('1','jack',28);
 
 ## 8. 还原操作
 
-
-
 ### 8.1 小数据库文件备份还原操作
 
 * 可以直接在主要数据库上直接还原即可
 * 其它辅助数据库会同步主要数据库的数据文件
-
-
 
 
 
@@ -324,10 +320,6 @@ GO
 ```
 
 * 然后在主要数据库上添加数据库 --> 全部连接 --> 选择恢复的数据库 --> "选择您的数据库同步选项" --> "仅联接" --> "直至完成即可"
-
-
-
-
 
 
 
@@ -1153,5 +1145,32 @@ GO
 -- 或
 -- ALTER DATABASE <你的数据库名称> SET AUTO_SHRINK ON
 -- 如: ALTER DATABASE myXXDB SET AUTO_SHRINK ON
+```
+
+Example:
+
+```sql
+--------------- ldf文件收缩 -----------
+------ 0. 进入数据库
+----use [ITConfigDB]
+
+------ 1. 查看当前打开的事务
+----DBCC OPENTRAN;
+
+------ 2. 备份事务日志
+----BACKUP LOG [ITConfigDB] TO DISK = 'E:\test\ITConfigDB_20250408103501.trn';
+
+------ 3. 执行检查点
+----CHECKPOINT;
+
+------ 4. 查看日志文件状态
+----DBCC LOGINFO([ITConfigDB]);
+
+------ 5. 收缩日志文件
+----DBCC SHRINKFILE ([ITConfigDB_log], 1);
+
+------ 6. 重复备份和收缩（如果需要）
+----BACKUP LOG [ITConfigDB] TO DISK = 'E:\test\ITConfigDB_20250408103502.trn';
+----DBCC SHRINKFILE ([ITConfigDB_log], 1);
 ```
 
