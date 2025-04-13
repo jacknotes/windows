@@ -556,15 +556,386 @@ ip: 192.168.13.139
 
 ### 15.5 恢复数据并联接到可用性组
 
-在其它节点全备需要的数据库，将备份好的数据库复制到此节点之上，然后进行恢复（恢复模式必须为`NORECOVERY`），然后在可用性组中联接此数据库
+在主节点全备需要的数据库，将备份好的数据库复制到此节点之上，然后进行恢复（恢复模式必须为`NORECOVERY`），然后在可用性组中联接此数据库
+
+```sql
+
+# 此节点恢复
+
+-- FinanceDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [FinanceDB] FROM DISK = N'C:\sqlserver-bak\FinanceDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'FinanceDB' TO N'D:\SQLData\FinanceDB.mdf',  
+MOVE N'FinanceDB_log' TO N'D:\SQLData\FinanceDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+-- SkyWalkerDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [SkyWalkerDB] FROM DISK = N'C:\sqlserver-bak\SkyWalkerDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'SkyWalkerDB' TO N'D:\SQLData\SkyWalkerDB.mdf',  
+MOVE N'SkyWalkerDB_log' TO N'D:\SQLData\SkyWalkerDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- SkyWalkerDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [SkyWalkerDB] FROM DISK = N'C:\sqlserver-bak\SkyWalkerDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'SkyWalkerDB' TO N'D:\SQLData\SkyWalkerDB.mdf',  
+MOVE N'SkyWalkerDB_log' TO N'D:\SQLData\SkyWalkerDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- IntegralDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [IntegralDB] FROM DISK = N'C:\sqlserver-bak\IntegralDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'IntegralDB' TO N'D:\SQLData\IntegralDB.mdf',  
+MOVE N'IntegralDB_log' TO N'D:\SQLData\IntegralDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- CommonFormDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [CommonFormDB] FROM DISK = N'C:\sqlserver-bak\CommonFormDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'CommonFormDB' TO N'D:\SQLData\CommonFormDB.mdf',  
+MOVE N'CommonFormDB_log' TO N'D:\SQLData\CommonFormDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- TripDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [TripDB] FROM DISK = N'C:\sqlserver-bak\TripDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'TripDB' TO N'D:\SQLData\TripDB.mdf',  
+MOVE N'TripDB_log' TO N'D:\SQLData\TripDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- ehomsom_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [ehomsom] FROM DISK = N'C:\sqlserver-bak\ehomsom_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'ehomsom_Data' TO N'D:\SQLData\ehomsom.mdf',  
+MOVE N'ehomsom_Log' TO N'D:\SQLData\ehomsom_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- TMS_ReportDb_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [TMS_ReportDb] FROM DISK = N'C:\sqlserver-bak\TMS_ReportDb_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'TMS_ReportDb' TO N'D:\SQLData\TMS_ReportDb.mdf',  
+MOVE N'TMS_ReportDb_log' TO N'D:\SQLData\TMS_ReportDb_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- OpenApiDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [OpenApiDB] FROM DISK = N'C:\sqlserver-bak\OpenApiDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'OpenApiDB' TO N'D:\SQLData\OpenApiDB.mdf',  
+MOVE N'OpenApiDB_log' TO N'D:\SQLData\OpenApiDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- HotelOrderDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [hotelorderdb] FROM DISK = N'C:\sqlserver-bak\HotelOrderDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'HotelOrderDB' TO N'D:\SQLData\hotelorderdb.mdf',  
+MOVE N'HotelOrderDB_log' TO N'D:\SQLData\hotelorderdb_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- ApproveBase_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [ApproveBase] FROM DISK = N'C:\sqlserver-bak\ApproveBase_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'ApproveBase' TO N'D:\SQLData\ApproveBase.mdf',  
+MOVE N'ApproveBase_log' TO N'D:\SQLData\ApproveBase_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- FlightTicketDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [FlightTicketDB] FROM DISK = N'C:\sqlserver-bak\FlightTicketDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'FlightTicketDB' TO N'D:\SQLData\FlightTicketDB.mdf',  
+MOVE N'FlightTicketDB_log' TO N'D:\SQLData\FlightTicketDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- RankDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [RankDB] FROM DISK = N'C:\sqlserver-bak\RankDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'RankDB' TO N'D:\SQLData\RankDB.mdf',  
+MOVE N'RankDB_log' TO N'D:\SQLData\RankDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- ITConfigDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [ITConfigDB] FROM DISK = N'C:\sqlserver-bak\ITConfigDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'ITConfigDB' TO N'D:\SQLData\ITConfigDB.mdf',  
+MOVE N'ITConfigDB_log' TO N'D:\SQLData\ITConfigDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- HotelDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [HotelDB] FROM DISK = N'C:\sqlserver-bak\HotelDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'Homsom.Hotel.Elong' TO N'D:\SQLData\HotelDB.mdf',  
+MOVE N'Homsom.Hotel.Elong_log' TO N'D:\SQLData\HotelDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- workflow_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [workflow] FROM DISK = N'C:\sqlserver-bak\workflow_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'workflow' TO N'D:\SQLData\workflow.mdf',  
+MOVE N'workflow_log' TO N'D:\SQLData\workflow_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- TargetCustomerDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [TargetCustomerDB] FROM DISK = N'C:\sqlserver-bak\TargetCustomerDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'TargetCustomerDB' TO N'D:\SQLData\TargetCustomerDB.mdf',  
+MOVE N'TargetCustomerDB_log' TO N'D:\SQLData\TargetCustomerDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- SMS_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [sms] FROM DISK = N'C:\sqlserver-bak\SMS_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'sms' TO N'D:\SQLData\sms.mdf',  
+MOVE N'sms_log' TO N'D:\SQLData\sms_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- CommissionDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [CommissionDB] FROM DISK = N'C:\sqlserver-bak\CommissionDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'CommissionDB' TO N'D:\SQLData\CommissionDB.mdf',  
+MOVE N'CommissionDB_log' TO N'D:\SQLData\CommissionDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- Topway_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [topway] FROM DISK = N'C:\sqlserver-bak\Topway_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'topway_Data' TO N'D:\SQLData\topway_Data.mdf',  
+MOVE N'ftrow_custphone' TO N'D:\SQLData\ftrow_custphone.ndf',  
+MOVE N'topway_Log' TO N'D:\SQLData\topway_Log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+
+-- TravelReportDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [TravelReportDB] FROM DISK = N'C:\sqlserver-bak\TravelReportDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'TravelReportDB_date' TO N'D:\SQLData\TravelReportDB.mdf',  
+MOVE N'TravelReportDB_log' TO N'D:\SQLData\TravelReportDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+-- homsomDB_20250413023000_full.bak
+USE master
+GO
+RESTORE DATABASE [homsomdb] FROM DISK = N'C:\sqlserver-bak\homsomDB_20250413023000_full.bak'
+WITH FILE = 1,
+MOVE N'homsom_db' TO N'D:\SQLData\homsomdb.mdf',  
+MOVE N'homsom_db_log' TO N'D:\SQLData\homsomdb_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
 
 
 
+# 主节点备份
+USE master
+GO
+BACKUP DATABASE [ActivityDB] TO DISK = N'E:\test\ActivityDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'ActivityDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [AdditionalServiceDB] TO DISK = N'E:\test\AdditionalServiceDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'AdditionalServiceDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [CachedProjectDB] TO DISK = N'E:\test\CachedProjectDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'CachedProjectDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [DataBoardDB] TO DISK = N'E:\test\DataBoardDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'DataBoardDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [EtermSrv_SysDB] TO DISK = N'E:\test\EtermSrv_SysDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'EtermSrv_SysDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [OperationLogsDB] TO DISK = N'E:\test\OperationLogsDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'OperationLogsDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [TrainOrderDB] TO DISK = N'E:\test\TrainOrderDB.bak'
+WITH NOFORMAT , NOINIT, NAME = N'TrainOrderDB-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
+
+USE master
+GO
+BACKUP DATABASE [WeixinRobot] TO DISK = N'E:\test\WeixinRobot.bak'
+WITH NOFORMAT , NOINIT, NAME = N'WeixinRobot-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+GO 
 
 
-### 配置节点为不可读写
 
-在`主要角色`节点中，右键选择可用性组`DBCONN` -> `属性` -> 选择`常规`选项 -> 在右边`可用性副本`栏中选择服务器实例`SRV-DB04` -> 选择`可读辅助副本`为`否`，最后点击确定
+# 此节点恢复
+USE master
+GO
+RESTORE DATABASE [ActivityDB] FROM DISK = N'C:\sqlserver-bak\ActivityDB.bak'
+WITH FILE = 1,
+MOVE N'ActivityDB' TO N'D:\SQLData\ActivityDB.mdf',  
+MOVE N'ActivityDB_log' TO N'D:\SQLData\ActivityDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+USE master
+GO
+RESTORE DATABASE [AdditionalServiceDB] FROM DISK = N'C:\sqlserver-bak\AdditionalServiceDB.bak'
+WITH FILE = 1,
+MOVE N'AdditionalServiceDB' TO N'D:\SQLData\AdditionalServiceDB.mdf',  
+MOVE N'AdditionalServiceDB_log' TO N'D:\SQLData\AdditionalServiceDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+USE master
+GO
+RESTORE DATABASE [CachedProjectDB] FROM DISK = N'C:\sqlserver-bak\CachedProjectDB.bak'
+WITH FILE = 1,
+MOVE N'CachedProjectDB' TO N'D:\SQLData\CachedProjectDB.mdf',  
+MOVE N'CachedProjectDB_log' TO N'D:\SQLData\CachedProjectDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+USE master
+GO
+RESTORE DATABASE [DataBoardDB] FROM DISK = N'C:\sqlserver-bak\DataBoardDB.bak'
+WITH FILE = 1,
+MOVE N'DataBoardDB' TO N'D:\SQLData\DataBoardDB.mdf',  
+MOVE N'DataBoardDB_log' TO N'D:\SQLData\DataBoardDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+USE master
+GO
+RESTORE DATABASE [EtermSrv_SysDB] FROM DISK = N'C:\sqlserver-bak\EtermSrv_SysDB.bak'
+WITH FILE = 1,
+MOVE N'EtermSrv_SysDB' TO N'D:\SQLData\EtermSrv_SysDB.mdf',  
+MOVE N'EtermSrv_SysDB_log' TO N'D:\SQLData\EtermSrv_SysDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+USE master
+GO
+RESTORE DATABASE [OperationLogsDB] FROM DISK = N'C:\sqlserver-bak\OperationLogsDB.bak'
+WITH FILE = 1,
+MOVE N'OperationLogsDB' TO N'D:\SQLData\OperationLogsDB.mdf',  
+MOVE N'OperationLogsDB_log' TO N'D:\SQLData\OperationLogsDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+
+USE master
+GO
+RESTORE DATABASE [TrainOrderDB] FROM DISK = N'C:\sqlserver-bak\TrainOrderDB.bak'
+WITH FILE = 1,
+MOVE N'TrainOrderDB' TO N'D:\SQLData\TrainOrderDB.mdf',  
+MOVE N'TrainOrderDB_log' TO N'D:\SQLData\TrainOrderDB_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+-- RESTORE FILELISTONLY FROM DISK = N'C:\sqlserver-bak\WeixinRobot.bak'
+
+
+USE master
+GO
+RESTORE DATABASE [WeixinRobot] FROM DISK = N'C:\sqlserver-bak\WeixinRobot.bak'
+WITH FILE = 1,
+MOVE N'WeixinRobot' TO N'D:\SQLData\WeixinRobot.mdf',  
+MOVE N'WeixinRobot_log' TO N'D:\SQLData\WeixinRobot_log.ldf', 
+NORECOVERY, NOUNLOAD, REPLACE, STATS = 10
+GO
+```
+
+
+
+### 15.6 添加此副本节点并配置节点为不可读写
+
+在主节点`AlwaysOn可用性组`中添加副本，右键选择可用性组`DBCONN` -> `属性` -> 选择`常规`选项 -> 在右边`可用性副本`栏中选择服务器实例`SRV-DB04` -> 选择`可读辅助副本`为`否`，最后点击确定
 
 > ```
 > 可读辅助副本参数：
@@ -574,6 +945,27 @@ ip: 192.168.13.139
 > ```
 
 
+
+### 15.7 查看此节点是否有客户端连接
+
+```sql
+-- 查看客户端连接
+SELECT 
+    conn.session_id,
+    conn.client_net_address,
+    sess.host_name,
+    sess.program_name,
+    sess.login_name,
+    sess.last_request_start_time,
+    sess.last_request_end_time,
+    sess.status
+FROM 
+    sys.dm_exec_connections AS conn
+    INNER JOIN sys.dm_exec_sessions AS sess
+        ON conn.session_id = sess.session_id;
+```
+
+![收缩日志前失败应用可用性数据库](../images/alwayson20.png)
 
 
 
