@@ -985,7 +985,9 @@ FROM
 
 ## 其它
 
-### WSFC群集故障事件
+### 1. WSFC群集故障事件
+
+`集群仲裁`也无法联机，提示脱机，另外集群也报错，**报错信息如下：**
 
 ```
 # 2024/10/27 15:19:41 开始报错
@@ -1001,5 +1003,64 @@ ID:
 # 2024/11/1 11:13:03 开始报错至今
 ID：
 1207(Network Name Resource)：在 Password change 操作期间，无法在域“hs.com”中更新与群集网络名称资源“DBCONN_DBCONN”相关联的计算机对象。相关联的错误代码的文本为: 指定的网络密码不正确。群集标识“DBCLUSTER$”可能缺乏更新该对象所需的权限。请与域管理员合作以确保群集标识可以更新域中的计算机对象。
+```
+
+
+
+**解决如下：**
+
+进行`验证群集`操作，查看了报告，得知所有集群节点系统未更新，报告提示警告，最终`滚动更新`所有节点，使更新补丁到最新，然后集群报错没有了，并且`集群仲裁`也可以正常`联机`了
+
+![收缩日志前失败应用可用性数据库](../images/wsfc12.png)
+
+![收缩日志前失败应用可用性数据库](../images/wsfc13.png)
+
+
+
+
+
+
+
+### 2. 用户绑定
+
+当AlwaysOn集群`主节点`迁移到`另外一个节点`时，新节点之前预先创建好的`登录用户`跟数据库里面的`数据库用户`没有绑定对应关系，所以导致迁移到新节点后用户无法连接，导致失败，需要执行以下`用户绑定`语句进行绑定后方可进行客户端连接
+
+**报错信息**
+
+```
+USE [homsomdb]
+> Msg 916, Level 14, State 1, Server SRV-DB04, Procedure , Line 0
+服务器主体 "commonuser" 无法在当前安全上下文下访问数据库 "homsomdb"。
+> [08004] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]服务器主体 "commonuser" 无法在当前安全上下文下访问数据库 "homsomdb"。 (916)
+
+> 时间: 0.002s
+
+```
+
+**用户绑定**
+
+```bash
+USE [testDB01] 
+GO
+sp_change_users_login 'update_one', 'commonsupersa', 'commonsupersa'
+GO
+sp_change_users_login 'update_one', 'commonuser', 'commonuser'
+GO
+sp_change_users_login 'update_one', 'dbbackup', 'dbbackup'
+GO
+sp_change_users_login 'update_one', 'HS\prod-dbuser', 'HS\prod-dbuser'
+GO
+
+USE [testDB02] 
+GO
+sp_change_users_login 'update_one', 'commonsupersa', 'commonsupersa'
+GO
+sp_change_users_login 'update_one', 'commonuser', 'commonuser'
+GO
+sp_change_users_login 'update_one', 'dbbackup', 'dbbackup'
+GO
+sp_change_users_login 'update_one', 'HS\prod-dbuser', 'HS\prod-dbuser'
+GO
+.....
 ```
 

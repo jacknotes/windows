@@ -915,3 +915,48 @@ PS C:\Users\0799> powercfg.exe /q 381b4222-f694-41f0-9685-ff5bb260df2e 238c9fa8-
 PS C:\Program Files\Update Services\Tools> .\WsusUtil.exe movecontent D:\WSUSData d:\wsusMove.log
 正在移动内容位置。请不要终止该程序。
 已成功完成内容移动。
+
+
+
+
+
+## Windows Terminal添加Bash
+1. 安装`Windows Git`程序
+2. Ctrl+Shift+P打开命令面板输入`打开设置文件(JSON)`打开settings.json
+3. 在`profiles`配置段添加`"name": "Git Bash"`的配置，如下显示，GUID可自动生成或用以下GUID
+```json
+    "profiles": 
+    {
+        "defaults": {},
+        "list": 
+        [
+            {
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}", 
+                "hidden": false,
+                "name": "\u547d\u4ee4\u63d0\u793a\u7b26"
+            },
+            {
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+                "hidden": false,
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
+            },
+			{
+				"guid": "{d2736993-1af8-4eaa-b03c-a3fcbf915a26}",
+				"name": "Git Bash",
+				"commandline": "C:\\Program Files\\Git\\bin\\bash.exe",
+				"icon": "C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico",
+				"startingDirectory": "%USERPROFILE%",
+				"colorScheme": "Campbell",
+				"fontFace": "Consolas",
+				"useAcrylic": true,
+				"acrylicOpacity": 0.8
+			}
+        ]
+    }
+```
