@@ -960,3 +960,52 @@ PS C:\Program Files\Update Services\Tools> .\WsusUtil.exe movecontent D:\WSUSDat
         ]
     }
 ```
+
+
+
+## 自动登录windows
+
+### 1. 配置注册表
+```cmd
+# 配置用户名、密码、是否自动登录(1为true，0为false)、如果是域用户需要配置域名称
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d "username" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d "password" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /t REG_SZ /d "test.com" /f
+```
+
+### 2. 锁定屏幕命令
+```cmd
+%windir%\system32\rundll32.exe user32.dll,LockWorkStation
+```
+
+### 3. 脚本实现自动登录运行程序并锁定屏幕
+```cmd
+# StartupAndLock.bat
+@echo off
+:: 设置工作目录并启动 waitress-serve（不阻塞）
+start "Waitress Server" /D "C:\software\hs-sgui" "C:\software\hs-sgui\waitress-serve.exe" --host 0.0.0.0 --port 8018 app:app
+
+:: 等待服务初始化（根据实际情况调整时间）
+timeout /t 3 /nobreak >nul
+
+:: 立即锁定工作站
+rundll32.exe user32.dll,LockWorkStation
+```
+
+### 4. 开机运行弹窗需确认问题
+```powershell
+## C:\Scripts\StartupAndLock.ps1
+# 启动 waitress-serve（后台运行）
+Start-Process -FilePath "C:\software\hs-sgui\waitress-serve.exe" -ArgumentList "--host 0.0.0.0 --port 8018 app:app" -WorkingDirectory "C:\software\hs-sgui" -WindowStyle Hidden
+
+# 等待 5 秒
+Start-Sleep -Seconds 5
+
+# 锁定工作站
+rundll32.exe user32.dll,LockWorkStation
+
+
+## 创建快捷方式，保存到 shell:startup
+powershell.exe -ExecutionPolicy Bypass -File "C:\Scripts\StartupAndLock.ps1"
+```
