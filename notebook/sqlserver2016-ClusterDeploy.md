@@ -45,14 +45,28 @@ net start wuauserv
 ## 3. 安装WSFC群集
 
 1. 服务器管理器 --> 添加功能和角色 --> 添加功能 --> "故障转移群集"，SRV-DB01、SRV-DB02、SRV-DB03三个节点都需要安装，安装完成后重启服务器生效
+
 2. 配置故障转移集群管理器，新建一个群集
 	* 将SRV-DB01、SRV-DB02、SRV-DB03三个服务器节点加入群集
 	* 运行群集测试
 	* 配置群集名称：DBCLUSTER，群集地址：192.168.13.134
 	* 去除 "将所有符合条件的存储添加到群集" 复选框
+	
 3. 配置仲裁，我们有3个节点，可以承受一个节点故障，但是第二次节点再故障将会脑裂，为了可以容忍二次节点故障，可以配置仲裁，这样就可以容忍二次节点故障了。
 	* 配置文件共享仲裁
+	
 	* 因为是DBCLUSTER群集去读写仲裁，所以需要将在文件共享中给予`DBCLUSTER`计算机用户读写权限、本地管理员administrators权限
+	
+	  ```powershell
+	  # 文件共享仲裁应配置为Name的值，权限为读写，这里面为计算机DBCLUSTER$
+	  PS C:\Users\dbadmin> Get-Cluster | Select-Object Name, Domain
+	  
+	  Name      Domain
+	  ----      ------
+	  DBCLUSTER hs.com
+	  ```
+	
+	  
 
 
 
